@@ -586,20 +586,20 @@ class TPerformant {
         /*=======*/
     
         /* List Hooks */
-        function hooks_list($oauth_token_key) {
+        function hooks_list($oauth_token_key='current') {
                return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.xml", "hook", null, 'GET');
         }
 
 
         /* Create a Hook */
-        function hook_create($oauth_token_key, $hook) {
+        function hook_create($hook, $oauth_token_key='current') {
                $request['hook'] = $hook;
 
                return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.xml", "hook", $request, 'POST');
         }
 
         /* Destroy a Hook */
-        function hook_destroy($oauth_token_key, $hook_id) {
+        function hook_destroy($hook_id, $oauth_token_key='current') {
                 return $this->hook("/oauth_clients/{$oauth_token_key}/hooks/{$hook_id}.xml", "hook", null, 'DELETE');
         }
 
