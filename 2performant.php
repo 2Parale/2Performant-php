@@ -650,18 +650,18 @@ class TPerformant {
         }
 
         /* Create an Advertiser Invoice */
-        function admin_advertiser_invoice_create($user_id, $advertiser_invoice, $commissions, $taxes) {
+        function admin_advertiser_invoice_create($user_id, $advertiser_invoice, $commissions, $fees) {
                 $request['advertiser_invoice'] = $advertiser_invoice;
                 $request['commissions'] = $commissions;
-                $request['taxes'] = $taxes;
+                $request['fees'] = $fees;
 
                 return $this->hook("/users/$user_id/advertiser_invoices.xml", "advertiser-invoice", $request, 'POST');
         }
 
         /* Update an Advertiser Invoice */
-        function admin_advertiser_invoice_update($user_id, $advertiser_invoice_id, $advertiser_invoice, $taxes=null) {
+        function admin_advertiser_invoice_update($user_id, $advertiser_invoice_id, $advertiser_invoice, $fees=null) {
                 $request['advertiser_invoice'] = $advertiser_invoice;
-                $request['taxes'] = $taxes;
+                $request['fees'] = $fees;
 
                 return $this->hook("/users/$user_id/advertiser_invoices/$advertiser_invoice_id.xml", "advertiser-invoice", $request, 'PUT');
         }
@@ -694,7 +694,7 @@ class TPerformant {
         }
 
 
-        /* Search for Advertiser Invoices */
+        /* Update a Campaign */
         function admin_campaign_update($campaign_id, $suspend=null, $reset=null) {
                 $request['suspend'] = $suspend;
                 $request['reset']   = $reset;
