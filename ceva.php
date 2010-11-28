@@ -34,5 +34,8 @@ $session = new TPerformant("simple", array("user" => 'uradmin', "pass" => '2para
 //$deposit = array("user_id" => 1193, "amount" => 150);
 //var_dump($session->admin_deposit_create($deposit));
 
-var_dump($session->admin_deposit_destroy(1193, 2));
+//var_dump($session->admin_deposit_destroy(1193, 2));
+
+//var_dump($session->admin_campaign_update(73, 0, 1));
+var_dump($session->admin_campaign_destroy(71));
 ?>

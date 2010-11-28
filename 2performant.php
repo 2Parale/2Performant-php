@@ -606,7 +606,6 @@ class TPerformant {
                 return $this->hook("/affiliate_invoices/search.xml", "affiliate-invoice", $request, 'POST');
         }
 
- 
         /* Create an Affiliate Invoice */
         function admin_affiliate_invoice_create($user_id, $affiliate_invoice, $commissions, $taxes) {
                 $request['affiliate_invoice'] = $affiliate_invoice;
@@ -614,8 +613,7 @@ class TPerformant {
                 $request['taxes'] = $taxes;
 
                 return $this->hook("/users/$user_id/affiliate_invoices.xml", "affiliate-invoice", $request, 'POST');
-        }
-      
+        }      
  
         /* Update an Affiliate Invoice */      
         function admin_affiliate_invoice_update($user_id, $affiliate_invoice_id, $affiliate_invoice, $taxes=null) {
@@ -651,7 +649,6 @@ class TPerformant {
                 return $this->hook("/advertiser_invoices/search.xml", "advertiser-invoice", $request, 'POST');
         }
 
-
         /* Create an Advertiser Invoice */
         function admin_advertiser_invoice_create($user_id, $advertiser_invoice, $commissions, $taxes) {
                 $request['advertiser_invoice'] = $advertiser_invoice;
@@ -660,7 +657,6 @@ class TPerformant {
 
                 return $this->hook("/users/$user_id/advertiser_invoices.xml", "advertiser-invoice", $request, 'POST');
         }
-
 
         /* Update an Advertiser Invoice */
         function admin_advertiser_invoice_update($user_id, $advertiser_invoice_id, $advertiser_invoice, $taxes=null) {
@@ -673,6 +669,42 @@ class TPerformant {
         /* Destroy an Advertiser Invoice */
         function admin_advertiser_invoice_destroy($user_id, $advertiser_invoice_id) {
                 return $this->hook("/users/$user_id/advertiser_invoices/$advertiser_invoice_id.xml", "advertiser-invoice", null, 'DELETE');
+        }
+
+
+        /*=================*/
+        /* Admin Campaigns */
+        /*=================*/
+
+        /* List Campaigns. Displays the first 15 entries by default. */
+        function admin_campaigns_list($page=1, $perpage=15) {
+                $request['page']        = $page;
+                $request['perpage']     = $perpage;
+
+                return $this->hook("/campaigns.xml", "campaign", $request, 'GET');
+        }
+
+        /* Search for Advertiser Invoices */
+        function admin_campaigns_search($search, $page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+                $request['search']  = $search;
+
+                return $this->hook("/campaigns/search.xml", "campaign", $request, 'POST');
+        }
+
+
+        /* Search for Advertiser Invoices */
+        function admin_campaign_update($campaign_id, $suspend=null, $reset=null) {
+                $request['suspend'] = $suspend;
+                $request['reset']   = $reset;
+
+                return $this->hook("/campaigns/$campaign_id.xml", "campaign", $request, 'PUT');
+        }
+
+        /* Destroy a Campaign */
+        function admin_campaign_destroy($campaign_id) {
+                return $this->hook("/campaigns/$campaign_id.xml", "campaign", null, 'DELETE');
         }
 
         /*===================*/
@@ -696,6 +728,31 @@ class TPerformant {
 
                 return $this->hook("/commissions/advertisers", "commission", $request, 'GET');
         }
+
+        /*==========*/
+        /* Deposits */
+        /*==========*/
+
+        /* List Deposits */
+        function admin_deposits_list($page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+
+                return $this->hook("/deposits.xml", "deposit", $request, 'GET');
+        }
+
+        /* Create a Deposit */
+        function admin_deposit_create($deposit) {
+                $request['deposit'] = $deposit;
+
+                return $this->hook("/users/all/deposits.xml", "deposit", $request, 'POST');
+        }
+
+        /* Destroy a Deposit */
+        function admin_deposit_destroy($user_id, $deposit_id) {
+                return $this->hook("/users/$user_id/deposits/$deposit_id.xml", "deposit", null, 'DELETE');
+        }
+
 
         /*=============*/
         /* Admin Users */
@@ -735,31 +792,6 @@ class TPerformant {
         function admin_user_destroy($user_id) {
                 return $this->hook("/users/$user_id.xml", "user", null, 'DELETE');
 	}
-
-        /*==========*/
-        /* Deposits */
-        /*==========*/
-
-        /* List Deposits */
-        function admin_deposits_list($page=1, $perpage=15) {
-                $request['page']    = $page;
-                $request['perpage'] = $perpage;
-
-                return $this->hook("/deposits.xml", "deposit", $request, 'GET');
-        }
-
-        /* Create a Deposit */
-        function admin_deposit_create($deposit) {
-                $request['deposit'] = $deposit;
-
-                return $this->hook("/users/all/deposits.xml", "deposit", $request, 'POST');
-        }
-
-        /* Destroy a Deposit */
-        function admin_deposit_destroy($user_id, $deposit_id) {
-                return $this->hook("/users/$user_id/deposits/$deposit_id.xml", "deposit", null, 'DELETE');
-        }
-
 
         /*=======*/
         /* Hooks */
