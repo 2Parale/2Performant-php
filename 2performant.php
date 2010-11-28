@@ -675,6 +675,91 @@ class TPerformant {
                 return $this->hook("/users/$user_id/advertiser_invoices/$advertiser_invoice_id.xml", "advertiser-invoice", null, 'DELETE');
         }
 
+        /*===================*/
+        /* Admin Commissions */
+        /*===================*/
+
+        /* List Affiliates Commissions  */
+        function admin_affiliates_commissions_list($search=null, $page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+                $request['search']  = $search;
+
+                return $this->hook("/commissions/affiliates", "commission", $request, 'GET');
+        }
+
+        /* List Advertiser Commissions  */
+        function admin_advertisers_commissions_list($search=null, $page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+                $request['search']  = $search;
+
+                return $this->hook("/commissions/advertisers", "commission", $request, 'GET');
+        }
+
+        /*=============*/
+        /* Admin Users */
+        /*=============*/
+
+        /* List Users */
+        function admin_users_list($page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+
+                return $this->hook("/users.xml", "user", $request, 'GET');
+        }
+
+        /* Search for Users */
+        function admin_users_search($search=null, $page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+                $request['search']  = $search;
+
+                return $this->hook("/users/search.xml", "user", $request, 'POST');
+        }
+
+        /* List Pending Users */
+        function admin_users_pending_list() {
+                return $this->hook("/users/pending.xml", "user", null, 'GET');
+        }
+
+        /* Process (Accept/Reject) a Pending User */
+        function admin_users_pending_process($user_id, $status, $message=null) {
+                $request['status'] = $status;
+                $request['message'] = $message;
+
+                return $this->hook("/users/$user_id/pending_process.xml", "user", $request, 'POST');
+        }
+
+        /* Destroy a User */
+        function admin_user_destroy($user_id) {
+                return $this->hook("/users/$user_id.xml", "user", null, 'DELETE');
+	}
+
+        /*==========*/
+        /* Deposits */
+        /*==========*/
+
+        /* List Deposits */
+        function admin_deposits_list($page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+
+                return $this->hook("/deposits.xml", "deposit", $request, 'GET');
+        }
+
+        /* Create a Deposit */
+        function admin_deposit_create($deposit) {
+                $request['deposit'] = $deposit;
+
+                return $this->hook("/users/all/deposits.xml", "deposit", $request, 'POST');
+        }
+
+        /* Destroy a Deposit */
+        function admin_deposit_destroy($user_id, $deposit_id) {
+                return $this->hook("/users/$user_id/deposits/$deposit_id.xml", "deposit", null, 'DELETE');
+        }
+
 
         /*=======*/
         /* Hooks */

@@ -23,6 +23,16 @@ $session = new TPerformant("simple", array("user" => 'uradmin', "pass" => '2para
 //$affiliate_invoice = array("completed" => "true");
 //var_dump($session->admin_affiliate_invoice_update(621, 45, $affiliate_invoice));
 
-var_dump($session->admin_affiliate_invoice_destroy(621, 44));
+//var_dump($session->admin_affiliate_invoice_destroy(621, 44));
 
+//var_dump($session->admin_advertisers_commissions_list());
+
+//var_dump($session->admin_users_search('gnat'));
+
+//var_dump($session->admin_users_pending_process('1101', 'reject', 'I pity the fool'));
+
+//$deposit = array("user_id" => 1193, "amount" => 150);
+//var_dump($session->admin_deposit_create($deposit));
+
+var_dump($session->admin_deposit_destroy(1193, 2));
 ?>
