@@ -57,6 +57,13 @@ class TPerformant {
                 return $this->hook("/users/loggedin.xml", "user");
         }
 
+        /* Create a new User */
+        function user_create($user, $user_info) {
+                $request['user'] = $user;
+		$request['user_info'] = $user_info;
+                return $this->hook("/users.xml", "user", $request, 'POST');
+        }
+
         /*===========*/
         /* Campaigns */
         /*===========*/
@@ -328,7 +335,6 @@ class TPerformant {
         */
         function txtad_create($campaign_id, $txtad) {
                 $request['txtad'] = $txtad;
-        
                 return $this->hook("/campaigns/{$campaign_id}/txtads.xml", "txtad", $request, 'POST');
         }
 
