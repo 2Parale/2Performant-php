@@ -58,9 +58,15 @@ class TPerformant {
         }
 
         /* Create a new User */
-        function user_create($user, $user_info) {
+        function user_create($user, $user_info, $fast_activation = 0) {
+                if (!$user)
+                  $user = array();
+
+                $user['fast_activation'] = $fast_activation;
+
                 $request['user'] = $user;
 		$request['user_info'] = $user_info;
+
                 return $this->hook("/users.xml", "user", $request, 'POST');
         }
 
