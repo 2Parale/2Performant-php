@@ -1,5 +1,9 @@
 Changelog
 =========
+* Sat Apr 16 19:49:36 EEST 2011 - Radu Spineanu <radu@2performant.com>
+  - 0.4 release
+  - API through JSON
+
 * Thu Feb 17 00:48:52 EET 2011 - Radu Spineanu <radu@2performant.com>
   - 0.3.1 release
   - add user_create method
