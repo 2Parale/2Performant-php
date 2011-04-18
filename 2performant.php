@@ -850,10 +850,10 @@ class TPerformant {
 	
 	function request($url, $params = null, $method) {
                 if (strpos($method, "admin_") == 0) {
-                	$admin_url = str_replace("api.", "admin.", $url);
-                	$url = $this->host . "/" . $admin_url;
+			$admin_url = str_replace("api.", "admin.", $url);
+			$url = $this->host . $admin_url;
                 } else {
-                	$url = $this->host . "/" . $this->version . $url;
+			$url = $this->host . $this->version . $url;
                 }
 
                 if ($this->auth_type == 'simple') {
