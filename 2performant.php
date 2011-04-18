@@ -33,7 +33,7 @@ class TPerformant {
                     $this->oauth = $auth_obj;
 
                     $this->oauthRequest = new HTTP_Request2;
-                    $this->oauthRequest->setHeader('Content-type: text/xml; charset=utf-8');
+                    $this->oauthRequest->setHeader('Content-type: text/json; charset=utf-8');
                 } else {
                     return false;
                 }
@@ -889,7 +889,7 @@ class TPerformant {
         }
 
         function oauthHttpRequest($url, $params, $method) {
-                $xml = null;
+                $json = null;
 
                 //set the headers
                 $this->oauthRequest->setHeader("Accept", "application/json");
@@ -897,9 +897,9 @@ class TPerformant {
 
                 if ($params) {
                         //serialize the data
-                        $xml = $this->serialize($params);
+                        $json = json_encode($params);
 
-                        $this->oauthRequest->setBody($xml);
+                        $this->oauthRequest->setBody($json);
                         $this->oauth->accept($this->oauthRequest);
                 }
                 
