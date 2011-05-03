@@ -3,9 +3,7 @@ Changelog
 
 * Tue May  3 20:23:58 EEST 2011 - Radu Spineanu <radu@2performant.com>
   - 0.4.3 release
-  - renamed admin_{affiliates,advertisers}_commissions_list to
-     admin_commissions_{affiliates,advertisers}_stats
-  - added admin_commissions_{affiliate,advertiser}_list which
+  - added admin_{affiliate,advertiser}_commissions_list which
     return commission details
 
 * Wed Apr 20 16:58:08 EEST 2011 - Radu Spineanu <radu@2performant.com>

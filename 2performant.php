@@ -723,7 +723,7 @@ class TPerformant {
         /*===================*/
 
         /* List Affiliate Commissions */
-        function admin_commissions_affiliate_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
+        function admin_affiliate_commissions_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
 		$request['user_id'] = $user_id;
 		$request['without_invoice'] = $without_invoice;
                 $request['page']    = $page;
@@ -733,7 +733,7 @@ class TPerformant {
         }
 
         /* List Affiliates Commissions Stats */
-        function admin_commissions_affiliates_stats($search=null, $page=1, $perpage=15) {
+        function admin_affiliates_commissions_stats($search=null, $page=1, $perpage=15) {
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
                 $request['search']  = $search;
@@ -742,7 +742,7 @@ class TPerformant {
         }
 
         /* List Advertiser Commissions */
-        function admin_commissions_advertiser_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
+        function admin_advertiser_commissions_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
                 $request['user_id'] = $user_id;
                 $request['without_invoice'] = $without_invoice;
                 $request['page']    = $page;
@@ -752,7 +752,7 @@ class TPerformant {
         }
 
         /* List Advertiser Commissions Stats */
-        function admin_commissions_advertisers_stats($search=null, $page=1, $perpage=15) {
+        function admin_advertisers_commissions_stats($search=null, $page=1, $perpage=15) {
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
                 $request['search']  = $search;
