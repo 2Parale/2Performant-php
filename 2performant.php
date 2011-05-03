@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.4.2
+   ver. 0.4.3
    http://help.2performant.com/API
    ================================ */
 
@@ -722,22 +722,42 @@ class TPerformant {
         /* Admin Commissions */
         /*===================*/
 
-        /* List Affiliates Commissions  */
-        function admin_affiliates_commissions_list($search=null, $page=1, $perpage=15) {
+        /* List Affiliate Commissions */
+        function admin_commissions_affiliate_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
+		$request['user_id'] = $user_id;
+		$request['without_invoice'] = $without_invoice;
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
-                $request['search']  = $search;
 
-                return $this->hook("/commissions/affiliates", "commission", $request, 'GET', 'admin');
+                return $this->hook("/commissions/listforaffiliate", "commission", $request, 'GET', 'admin');
         }
 
-        /* List Advertiser Commissions  */
-        function admin_advertisers_commissions_list($search=null, $page=1, $perpage=15) {
+        /* List Affiliates Commissions Stats */
+        function admin_commissions_affiliates_stats($search=null, $page=1, $perpage=15) {
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
                 $request['search']  = $search;
 
-                return $this->hook("/commissions/advertisers", "commission", $request, 'GET', 'admin');
+                return $this->hook("/commissions/affiliates_stats", "commissions", $request, 'GET', 'admin');
+        }
+
+        /* List Advertiser Commissions */
+        function admin_commissions_advertiser_list($user_id, $without_invoice=1, $page=1, $perpage=15) {
+                $request['user_id'] = $user_id;
+                $request['without_invoice'] = $without_invoice;
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+
+                return $this->hook("/commissions/listforadvertiser", "commission", $request, 'GET', 'admin');
+        }
+
+        /* List Advertiser Commissions Stats */
+        function admin_commissions_advertisers_stats($search=null, $page=1, $perpage=15) {
+                $request['page']    = $page;
+                $request['perpage'] = $perpage;
+                $request['search']  = $search;
+
+                return $this->hook("/commissions/advertisers_stats", "commissions", $request, 'GET', 'admin');
         }
 
         /*==========*/
