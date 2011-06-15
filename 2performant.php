@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.4.3
+   ver. 0.4.4
    http://help.2performant.com/API
    ================================ */
 
@@ -560,6 +560,88 @@ class TPerformant {
         function feed_destroy($feed_id) {
                 return $this->hook("/feeds/{$feed_id}.json", "feed", null, "DELETE");
         }
+
+        /*============*/
+        /* Statistics */
+        /*============*/
+
+        /* Conversion Rate */
+        function stats_trend_conversion($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date;
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_conversion.json", "stats", null, "GET");
+        }
+
+        /* Commissions Amount */
+        function stats_commissions_amount($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date;
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_commissions_amount.json", "stats", null, "GET");
+        }
+
+        /* Clicks */
+        function stats_clicks($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date;
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_clicks.json", "stats", null, "GET");
+        } 
+
+        /* Unique Visitors */
+        function stats_visitors($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date; 
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_visitors.json", "stats", null, "GET");
+        }
+
+	/* Actions (Leads + Sales) */
+        function stats_trend_actions($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date;
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_actions.json", "stats", null, "GET");
+        }
+
+        /* Sales Amount */
+        function stats_sales_amount($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date; 
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_sales_amount.json", "stats", null, "GET");
+        }
+
+        /* EPC */
+        function stats_epc($start_date, $end_date, $options) {
+                $request['start_date'] = $start_date;
+                $request['end_date'] = $end_date; 
+
+                foreach($options as $key => $value)
+                  $request[$key] = $value;
+
+                return $this->hook("/stats/trend_epc.json", "stats", null, "GET");
+        }
+
 
         /*==========*/
         /* Messages */
