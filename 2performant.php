@@ -566,7 +566,7 @@ class TPerformant {
         /*============*/
 
         /* Conversion Rate */
-        function stats_trend_conversion($start_date, $end_date, $options) {
+        function stats_conversion($start_date, $end_date, $options) {
                 $request['start_date'] = $start_date;
                 $request['end_date'] = $end_date;
 
