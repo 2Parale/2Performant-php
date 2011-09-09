@@ -1,6 +1,12 @@
 Changelog
 =========
 
+* Fri Sep 09 03:18:22 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5 RC1
+  - added TPException class and descendants and thrown them in appropriate locations, in case of errors
+  - tweaked include path to make sure appropriate PEAR classes are loaded
+  - renamed 2performant.php to TPerformant.php for easy framework integration
+
 * Wed Jun 15 12:30:58 EEST 2011 - Radu Spineanu <radu@2performant.com>
   - 0.4.4 release
   - added stats_ functions
