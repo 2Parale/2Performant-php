@@ -1,19 +1,22 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.4.4
+   ver. 0.5 RC1
    http://help.2performant.com/API
    ================================ */
 
 ini_set(
   'include_path',
-  ini_get( 'include_path' ) . PATH_SEPARATOR . "2pphp/PEAR/" . PATH_SEPARATOR . "2pphp/" . PATH_SEPARATOR . "PEAR/"
+   dirname(__FILE__) . '/PEAR' . PATH_SEPARATOR . dirname(__FILE__) . PATH_SEPARATOR . ini_get( 'include_path' )
 );
 
 require 'PEAR.php';
 require_once 'HTTP/Request2.php';
 require_once 'HTTP/OAuth.php';
 require_once 'HTTP/OAuth/Consumer.php';
+require_once 'TPException.php';
+require_once 'TPException_API.php';
+require_once 'TPException_Connection.php';
 
 class TPerformant {
 	
@@ -256,7 +259,7 @@ class TPerformant {
 
         /* Affiliates: Destroy a site */
         function site_destroy($site_id) {
-                return $this->hook("/sites/{$site_id}.json", "site", $request, 'DELETE');
+                return $this->hook("/sites/{$site_id}.json", "site", null, 'DELETE');
         }
 
         /*============*/
@@ -573,7 +576,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_conversion.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_conversion.json", "stats", $request, "GET");
         }
 
         /* Commissions Amount */
@@ -584,7 +587,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_commissions_amount.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_commissions_amount.json", "stats", $request, "GET");
         }
 
         /* Clicks */
@@ -595,7 +598,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_clicks.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_clicks.json", "stats", $request, "GET");
         } 
 
         /* Unique Visitors */
@@ -606,7 +609,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_visitors.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_visitors.json", "stats", $request, "GET");
         }
 
 	/* Actions (Leads + Sales) */
@@ -617,7 +620,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_actions.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_actions.json", "stats", $request, "GET");
         }
 
         /* Sales Amount */
@@ -628,7 +631,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_sales_amount.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_sales_amount.json", "stats", $request, "GET");
         }
 
         /* EPC */
@@ -639,7 +642,7 @@ class TPerformant {
                 foreach($options as $key => $value)
                   $request[$key] = $value;
 
-                return $this->hook("/stats/trend_epc.json", "stats", null, "GET");
+                return $this->hook("/stats/trend_epc.json", "stats", $request, "GET");
         }
 
 
@@ -652,7 +655,7 @@ class TPerformant {
                 $request['page']      = $page;
                 $request['perpage']   = $perpage;
 
-                return $this->hook("/messages.json", "message", null, "GET");
+                return $this->hook("/messages.json", "message", $request, "GET");
         }
 
         /* List sent messages. Displays the first 6 entries by default. */
@@ -660,7 +663,7 @@ class TPerformant {
                 $request['page']      = $page;
                 $request['perpage']   = $perpage;
 
-                return $this->hook("/messages/sent.json", "message", null, "GET");
+                return $this->hook("/messages/sent.json", "message", $request, "GET");
         }
 
         /* Display information about a message */
@@ -934,8 +937,14 @@ class TPerformant {
         /*===========================*/
 	
 	function hook($url,$expected, $send = null, $method = 'GET', $where = 'main') {
-		$returned = json_decode($this->request($url, $send, $method, $where));
+		$response = $this->request($url, $send, $method, $where);
+		$returned = json_decode($response);
 		$result = null;
+		
+		if($returned === NULL)
+			throw new TPException_Connection($this, 'Unable to parse response from API', null, $response);
+		if(isset($returned->error))
+			throw new TPException_API($this, $returned->error, null, array('request'=>array($url, $send, $method, $where),'response'=>$response));
 
 		if (is_array($returned)) {
 			$result = array();
@@ -962,7 +971,8 @@ class TPerformant {
                         return $this->simpleHttpRequest($url, $params, $method);
                 } else if ($this->auth_type == 'oauth') {
                         return $this->oauthHttpRequest($url, $params, $method);        
-                }
+                } else
+                	throw new TPException($this, 'Invalid authentication type');
 	}
 
         function simpleHttpRequest($url, $params, $method) {
@@ -981,12 +991,18 @@ class TPerformant {
                 $req->setHeader("Accept", "application/json");
                 $req->setHeader("Content-Type", "application/json");
 
-                $response = $req->send();
+                try {
+                	$response = $req->send();
+                } catch(HTTP_Request2_Exception $e) {
+                	throw new TPException_Connection($this, 'Unable to send simple request to API server', $e);
+                }
 
                 if (PEAR::isError($response)) {
-                        return $response->getMessage();
+                        throw new TPException_Connection($this, $response->getMessage());
+                } elseif($response->getStatus() != 200) {
+                		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>$req, 'response'=>$response));
                 } else {
-                        return $response->getBody();
+                		return $response->getBody();
                 }
         }
 
@@ -1005,8 +1021,17 @@ class TPerformant {
                         $this->oauth->accept($this->oauthRequest);
                 }
                 
-                $response = $this->oauth->sendRequest($url, array(), $method);
-                return $response->getBody();
+                try {
+                	$response = $this->oauth->sendRequest($url, array(), $method);
+                } catch(HTTP_OAuth_Exception $e) {
+                	throw new TPException_Connection($this, 'Unable to send OAuth request to API server', $e);
+                }
+
+                if($response->getStatus() != 200) {
+                		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>array($url, $method), 'response'=>$response));
+                } else {
+                		return $response->getBody();
+                }
         }
 
 }
