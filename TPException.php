@@ -9,7 +9,7 @@ class TPException extends Exception {
 			parent::__construct($message, 0, $previous);
 		else
 			parent::__construct(
-			is_null($previous) ? $message : ($message . ': ' . $previous)
+			is_null($previous) ? $message : ($message . ': ' . $previous->getMessage())
 			, 0);
 		$this->_tp = $tp;
 		$this->_data = $data;
