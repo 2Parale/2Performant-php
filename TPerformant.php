@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5 RC1
+   ver. 0.5
    http://help.2performant.com/API
    ================================ */
 
@@ -702,6 +702,11 @@ class TPerformant {
                 return $this->hook("/affiliate_invoices/search.json", "affiliate_invoice", $request, 'POST', 'admin');
         }
 
+        /* Show an Affiliate Invoice */
+        function admin_affiliate_invoice_show($invoice_id) {
+                return $this->hook("/users/all/affiliate_invoices/$invoice_id.json", "affiliate_invoice", array(), 'GET', 'admin');
+        }
+
         /* Create an Affiliate Invoice */
         function admin_affiliate_invoice_create($user_id, $affiliate_invoice, $commissions, $taxes) {
                 $request['affiliate_invoice'] = $affiliate_invoice;
@@ -743,6 +748,11 @@ class TPerformant {
                 $request['search']  = $search;
 
                 return $this->hook("/advertiser_invoices/search.json", "advertiser_invoice", $request, 'POST', 'admin');
+        }
+        
+        /* Show an Advertiser Invoice */
+        function admin_advertiser_invoice_show($invoice_id) {
+                return $this->hook("/users/all/advertiser_invoices/$invoice_id.json", "advertiser_invoice", array(), 'GET', 'admin');
         }
 
         /* Create an Advertiser Invoice */
@@ -976,7 +986,11 @@ class TPerformant {
 	}
 
         function simpleHttpRequest($url, $params, $method) {
-                $req = new HTTP_Request2($url, $method, array ('ssl_verify_peer' => false, 'ssl_verify_host' => false));
+                $req = new HTTP_Request2($url, $method, array (
+                        'ssl_verify_peer' => false,
+                        'ssl_verify_host' => false,
+                        'follow_redirects' => true
+                ));
 
                 //authorize
                 $req->setAuth($this->user, $this->pass);
