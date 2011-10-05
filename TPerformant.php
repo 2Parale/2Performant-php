@@ -824,7 +824,7 @@ class TPerformant {
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
 
-                return $this->hook("/commissions/listforaffiliate", "commission", $request, 'GET', 'admin');
+                return $this->hook("/commissions/listforaffiliate.json", "commission", $request, 'GET', 'admin');
         }
 
         /* List Affiliates Commissions Stats */
@@ -833,7 +833,7 @@ class TPerformant {
                 $request['perpage'] = $perpage;
                 $request['search']  = $search;
 
-                return $this->hook("/commissions/affiliates_stats", "commissions", $request, 'GET', 'admin');
+                return $this->hook("/commissions/affiliates_stats.json", "commissions", $request, 'GET', 'admin');
         }
 
         /* List Advertiser Commissions */
@@ -843,7 +843,7 @@ class TPerformant {
                 $request['page']    = $page;
                 $request['perpage'] = $perpage;
 
-                return $this->hook("/commissions/listforadvertiser", "commission", $request, 'GET', 'admin');
+                return $this->hook("/commissions/listforadvertiser.json", "commission", $request, 'GET', 'admin');
         }
 
         /* List Advertiser Commissions Stats */
@@ -852,7 +852,7 @@ class TPerformant {
                 $request['perpage'] = $perpage;
                 $request['search']  = $search;
 
-                return $this->hook("/commissions/advertisers_stats", "commissions", $request, 'GET', 'admin');
+                return $this->hook("/commissions/advertisers_stats.json", "commissions", $request, 'GET', 'admin');
         }
 
         /*==========*/

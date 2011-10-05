@@ -1,6 +1,16 @@
 Changelog
 =========
 
+* Wed Oct 05 22:47:12 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5.1 release
+  - corrected admin invoices URLs
+
+* Wed Sep 28 17:28:42 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5 release
+  - Better exception messages
+  - Allow redirects on requests (for admin requests)
+  - Added admin_affiliate_invoice_show and admin_advertiser_invoice_show methods
+
 * Fri Sep 09 03:18:22 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
   - 0.5 RC1
   - added TPException class and descendants and thrown them in appropriate locations, in case of errors
