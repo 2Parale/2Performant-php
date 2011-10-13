@@ -1013,7 +1013,7 @@ class TPerformant {
 
                 if (PEAR::isError($response)) {
                         throw new TPException_Connection($this, $response->getMessage());
-                } elseif($response->getStatus() != 200) {
+                } elseif( !preg_match('/^2\d{2}$/', $response->getStatus()) ) {
                 		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>$req, 'response'=>$response));
                 } else {
                 		return $response->getBody();
@@ -1041,7 +1041,7 @@ class TPerformant {
                 	throw new TPException_Connection($this, 'Unable to send OAuth request to API server', $e);
                 }
 
-                if($response->getStatus() != 200) {
+                if( !preg_match('/^2\d{2}$/', $response->getStatus()) ) {
                 		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>array($url, $method), 'response'=>$response));
                 } else {
                 		return $response->getBody();
