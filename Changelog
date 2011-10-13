@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* Thu Oct 13 20:06:36 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5.2 release
+  - accept any 2xx HTTP status code instead of just 200
+
 * Wed Oct 05 22:47:12 EEST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
   - 0.5.1 release
   - corrected admin invoices URLs
