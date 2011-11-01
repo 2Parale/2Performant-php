@@ -952,7 +952,10 @@ class TPerformant {
 		$result = null;
 		
 		if($returned === NULL)
-			throw new TPException_Connection($this, 'Unable to parse response from API', null, $response);
+			if($method != 'DELETE')
+				throw new TPException_Connection($this, 'Unable to parse response from API', null, $response);
+			else
+				return true;
 		if(isset($returned->error))
 			throw new TPException_API($this, $returned->error, null, array('request'=>array($url, $send, $method, $where),'response'=>$response));
 
