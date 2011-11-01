@@ -17,6 +17,7 @@ require_once 'HTTP/OAuth/Consumer.php';
 require_once 'TPException.php';
 require_once 'TPException_API.php';
 require_once 'TPException_Connection.php';
+require_once 'TPException_Transport.php';
 
 class TPerformant {
 	
@@ -953,7 +954,7 @@ class TPerformant {
 		
 		if($returned === NULL)
 			if($method != 'DELETE')
-				throw new TPException_Connection($this, 'Unable to parse response from API', null, $response);
+				throw new TPException_Transport($this, 'Unable to parse response from API', null, $response);
 			else
 				return true;
 		if(isset($returned->error))
@@ -1015,9 +1016,9 @@ class TPerformant {
                 }
 
                 if (PEAR::isError($response)) {
-                        throw new TPException_Connection($this, $response->getMessage());
+                        throw new TPException_Transport($this, $response->getMessage());
                 } elseif( !preg_match('/^2\d{2}$/', $response->getStatus()) ) {
-                		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>$req, 'response'=>$response));
+                		throw new TPException_Transport($this, $response->getReasonPhrase(), null, array('request'=>$req, 'response'=>$response));
                 } else {
                 		return $response->getBody();
                 }
@@ -1045,7 +1046,7 @@ class TPerformant {
                 }
 
                 if( !preg_match('/^2\d{2}$/', $response->getStatus()) ) {
-                		throw new TPException_API($this, $response->getReasonPhrase(), null, array('request'=>array($url, $method), 'response'=>$response));
+                		throw new TPException_Transport($this, $response->getReasonPhrase(), null, array('request'=>array($url, $method), 'response'=>$response));
                 } else {
                 		return $response->getBody();
                 }
