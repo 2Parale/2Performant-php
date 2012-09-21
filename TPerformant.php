@@ -124,7 +124,7 @@ class TPerformant {
         /* Create a Deep Link. This method was created so it wouldn't make a request for every Quick Link.
            You may need to get some data before using it. */
         function campaign_quicklink($campaign_id, $aff_code, $redirect) {
-          $url = $this->host."/events/click?ad_type=quicklink&aff_code=".$aff_code."&unique=".$campaign_id."&redirect_to=".$redirect;
+          $url = $this->host."/events/click?ad_type=quicklink&aff_code=".$aff_code."&unique=".$campaign_id."&redirect_to=".urlencode($redirect);
           if ($this->auth_type == 'oauth') {
             $url = $url."&app=".$this->oauth->getToken();
           }
