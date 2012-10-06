@@ -148,16 +148,16 @@ abstract class HTTP_OAuth
 
         uksort($params, 'strcmp');
 
-	$pairs = array();
-	foreach ($params as $key => $value) {
-	    if (get_class($value) == stdClass) {
-		foreach ($value as $key2 => $value2) {
-		    $pairs[] = urlencode($key) . urlencode('[') . $key2 . urlencode(']') . '=' . urlencode($value2);
-	        }
-	    } else {
-	        $pairs[] = $key . '=' . urlencode($value);
-	    }
-	}
+        $pairs = array();
+        foreach ($params as $key => $value) {
+            if (get_class($value) == stdClass) {
+                foreach ($value as $key2 => $value2) {
+                    $pairs[] = $key . urlencode('[') . $key2 . urlencode(']') . '=' . urlencode($value2);
+                }
+            } else {
+               $pairs[] = $key . '=' . urlencode($value);
+            }
+        }
 
         return implode('&', $pairs);
     }
