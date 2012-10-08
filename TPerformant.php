@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5.3
+   ver. 0.5.4
    http://help.2performant.com/API
    ================================ */
 
@@ -215,13 +215,8 @@ class TPerformant {
 
         /* Merchant: Update a commission */
         function commission_update($commission_id, $commission) {
-                unset($commission->history);
-                unset($commission->reason);
-                unset($commission->delta);
-                unset($commission->public_action_data);
-                unset($commission->public_click_data);
-	        unset($commission->currency);
-		$request['commission'] = $commission;
+        		unset($commission['public_action_data'], $commission['public_click_data']);
+                $request['commission'] = $commission;
                 return $this->hook("/commissions/{$commission_id}.json", "commission", $request, 'PUT');
         }
 
@@ -932,20 +927,21 @@ class TPerformant {
     
         /* List Hooks */
         function hooks_list($oauth_token_key='current') {
-               return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.json", "hook", null, 'GET');
+               return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.json", "client_application_hook", null, 'GET');
         }
 
 
         /* Create a Hook */
-        function hook_create($hook, $oauth_token_key='current') {
-               $request['hook'] = $hook;
+        function hook_create($name, $opts, $oauth_token_key='current') {
+               $request['name'] = $name;
+               $request['opts'] = $opts;
 
-               return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.json", "hook", $request, 'POST');
+               return $this->hook("/oauth_clients/{$oauth_token_key}/hooks.json", "client_application_hook", $request, 'POST');
         }
 
         /* Destroy a Hook */
         function hook_destroy($hook_id, $oauth_token_key='current') {
-                return $this->hook("/oauth_clients/{$oauth_token_key}/hooks/{$hook_id}.json", "hook", null, 'DELETE');
+                return $this->hook("/oauth_clients/{$oauth_token_key}/hooks/{$hook_id}.json", "client_application_hook", null, 'DELETE');
         }
 
 
