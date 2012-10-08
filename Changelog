@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* Thu Nov 03 20:13:44 EST 2011 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5.4 release
+  - fixed a bunch of errors regarding OAuth signatures for POST requests
+
 * Thu Nov 03 20:13:44 EST 2011 - Tudor Sandy <tudor.sandu@2parale.ro>
   - 0.5.3 release
   - added transport exceptions
