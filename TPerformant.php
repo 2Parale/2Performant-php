@@ -217,7 +217,12 @@ class TPerformant {
 
         /* Merchant: Update a commission */
         function commission_update($commission_id, $commission) {
-        		unset($commission['public_action_data'], $commission['public_click_data']);
+                unset($commission->history);
+                unset($commission->reason);
+                unset($commission->delta);
+                unset($commission->public_action_data);
+                unset($commission->public_click_data);
+                unset($commission->currency);
                 $request['commission'] = $commission;
                 return $this->hook("/commissions/{$commission_id}.json", "commission", $request, 'PUT');
         }
