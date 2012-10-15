@@ -150,13 +150,7 @@ abstract class HTTP_OAuth
 
         $pairs = array();
         foreach ($params as $key => $value) {
-            if (get_class($value) == stdClass) {
-                foreach ($value as $key2 => $value2) {
-                    $pairs[] = $key . urlencode('[') . $key2 . urlencode(']') . '=' . urlencode($value2);
-                }
-            } else {
-               $pairs[] = $key . '=' . urlencode($value);
-            }
+            $pairs[] =  $key . '=' . $value;
         }
 
         return implode('&', $pairs);
@@ -172,7 +166,7 @@ abstract class HTTP_OAuth
     static public function urlencode($item)
     {
         static $search  = array('+', '%7E');
-        static $replace = array(' ', '~');
+        static $replace = array('%20', '~');
 
         if (is_array($item)) {
             return array_map(array('HTTP_OAuth', 'urlencode'), $item);
