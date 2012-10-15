@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5.5
+   ver. 0.5.6
    http://help.2performant.com/API
    ================================ */
 
@@ -191,19 +191,21 @@ class TPerformant {
         }
 
         /* Merchants: List commissions on campaigns. Month: 01 to 12; Year: 20xx. */
-        function commissions_listforadvertiser($campaign_id, $month, $year) {
+        function commissions_listforadvertiser($campaign_id, $month, $year, $page=1) {
                 $request['campaign_id'] = $campaign_id;
-		$request['month']       = $month;
+                $request['month']       = $month;
                 $request['year']        = $year;
+                $request['page']        = $page;
 
                 return $this->hook("/commissions/listforadvertiser.json", "campaign", $request, 'GET');
         }
 
         /* Affiliates: List commissions on campaigns. Month: 01 to 12; Year: 20xx. */
-        function commissions_listforaffiliate($campaign_id, $month, $year) {
+        function commissions_listforaffiliate($campaign_id, $month, $year, $page=1) {
                 $request['campaign_id'] = $campaign_id;
                 $request['month']       = $month;
                 $request['year']        = $year;
+                $request['page']        = $page;
 
                 return $this->hook("/commissions/listforaffiliate.json", "commission", $request, 'GET');
         }
@@ -215,7 +217,12 @@ class TPerformant {
 
         /* Merchant: Update a commission */
         function commission_update($commission_id, $commission) {
-        		unset($commission['public_action_data'], $commission['public_click_data']);
+                unset($commission->history);
+                unset($commission->reason);
+                unset($commission->delta);
+                unset($commission->public_action_data);
+                unset($commission->public_click_data);
+                unset($commission->currency);
                 $request['commission'] = $commission;
                 return $this->hook("/commissions/{$commission_id}.json", "commission", $request, 'PUT');
         }
