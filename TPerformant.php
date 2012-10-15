@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5.5
+   ver. 0.5.6
    http://help.2performant.com/API
    ================================ */
 
