@@ -1,6 +1,11 @@
 Changelog
 =========
 
+* Mon Oct 15 20:09:43 EST 2012 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - 0.5.6 release
+  - added paging for commission listing methods
+  - fixed improper merge for v0.5.4, which fixed commission updating
+
 * Mon Oct 15 13:36:22 EST 2012 - Tudor Sandu <tudor.sandu@2parale.ro>
   - 0.5.5 release
   - updated PEAR libraries to most recent versions
