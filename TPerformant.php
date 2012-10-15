@@ -191,19 +191,21 @@ class TPerformant {
         }
 
         /* Merchants: List commissions on campaigns. Month: 01 to 12; Year: 20xx. */
-        function commissions_listforadvertiser($campaign_id, $month, $year) {
+        function commissions_listforadvertiser($campaign_id, $month, $year, $page=1) {
                 $request['campaign_id'] = $campaign_id;
-		$request['month']       = $month;
+                $request['month']       = $month;
                 $request['year']        = $year;
+                $request['page']        = $page;
 
                 return $this->hook("/commissions/listforadvertiser.json", "campaign", $request, 'GET');
         }
 
         /* Affiliates: List commissions on campaigns. Month: 01 to 12; Year: 20xx. */
-        function commissions_listforaffiliate($campaign_id, $month, $year) {
+        function commissions_listforaffiliate($campaign_id, $month, $year, $page=1) {
                 $request['campaign_id'] = $campaign_id;
                 $request['month']       = $month;
                 $request['year']        = $year;
+                $request['page']        = $page;
 
                 return $this->hook("/commissions/listforaffiliate.json", "commission", $request, 'GET');
         }
