@@ -102,8 +102,9 @@ class TPerformant {
         }
 
         /* Affiliates: List campaigns which have the logged in user accepted */
-        function campaigns_listforaffiliate() {
-                return $this->hook("/campaigns/listforaffiliate.json", "campaign");
+        function campaigns_listforaffiliate($page=1) {
+            $request['page'] = $page;
+                return $this->hook("/campaigns/listforaffiliate.json", "campaign", $request, 'GET');
         }
 
         /* Merchants: List all campaigns created by the logged in user */
@@ -167,8 +168,9 @@ class TPerformant {
         }
 
         /* Merchants: List affiliates approved in campaigns */
-	function affiliates_listforadvertiser($campaign_id=null) {
-		$request['campaign_id'] = $campaign_id;
+	function affiliates_listforadvertiser($campaign_id=null, $page=1) {
+		$request['page'] = $page;
+        $request['campaign_id'] = $campaign_id;
                 return $this->hook("/affiliates/listforadvertiser", "user", $request, 'GET');
         } 
        
