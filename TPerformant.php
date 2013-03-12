@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5.6
+   ver. 0.6
    http://help.2performant.com/API
    ================================ */
 
@@ -23,11 +23,12 @@ class TPerformant {
 	
 	var $user;
 	var $pass;
-        var $host;
-        var $version = "v1.0";
-        var $auth_type;
-        var $oauth;
-        var $oauthRequest;
+    var $host;
+    var $api_version = "v1.0";
+    var $wrapper_version = "0.6";
+    var $auth_type;
+    var $oauth;
+    var $oauthRequest;
 	
 	function TPerformant($auth_type, $auth_obj, $host) {
                 if ($auth_type == 'simple') {
@@ -987,7 +988,7 @@ class TPerformant {
 			$admin_host = str_replace("api.", "admin.", $this->host);
 			$url = $admin_host . $url;
                 } else {
-			$url = $this->host . '/' . $this->version . $url;
+			$url = $this->host . '/' . $this->api_version . $url;
                 }
 
                 if ($this->auth_type == 'simple') {
@@ -1004,6 +1005,7 @@ class TPerformant {
                         'ssl_verify_host' => false,
                         'follow_redirects' => true
                 ));
+                $req->setHeader('User-Agent', 'TP-PHP-API:'.__CLASS__.'-v'.$this->wrapper_version);
 
                 //authorize
                 $req->setAuth($this->user, $this->pass);
