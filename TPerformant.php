@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.5.6
+   ver. 0.6
    http://help.2performant.com/API
    ================================ */
 
@@ -23,11 +23,12 @@ class TPerformant {
 	
 	var $user;
 	var $pass;
-        var $host;
-        var $version = "v1.0";
-        var $auth_type;
-        var $oauth;
-        var $oauthRequest;
+    var $host;
+    var $api_version = "v1.0";
+    var $wrapper_version = "0.6";
+    var $auth_type;
+    var $oauth;
+    var $oauthRequest;
 	
 	function TPerformant($auth_type, $auth_obj, $host) {
                 if ($auth_type == 'simple') {
@@ -101,8 +102,9 @@ class TPerformant {
         }
 
         /* Affiliates: List campaigns which have the logged in user accepted */
-        function campaigns_listforaffiliate() {
-                return $this->hook("/campaigns/listforaffiliate.json", "campaign");
+        function campaigns_listforaffiliate($page=1) {
+            $request['page'] = $page;
+                return $this->hook("/campaigns/listforaffiliate.json", "campaign", $request, 'GET');
         }
 
         /* Merchants: List all campaigns created by the logged in user */
@@ -166,8 +168,9 @@ class TPerformant {
         }
 
         /* Merchants: List affiliates approved in campaigns */
-	function affiliates_listforadvertiser($campaign_id=null) {
-		$request['campaign_id'] = $campaign_id;
+	function affiliates_listforadvertiser($campaign_id=null, $page=1) {
+		$request['page'] = $page;
+        $request['campaign_id'] = $campaign_id;
                 return $this->hook("/affiliates/listforadvertiser", "user", $request, 'GET');
         } 
        
@@ -987,7 +990,7 @@ class TPerformant {
 			$admin_host = str_replace("api.", "admin.", $this->host);
 			$url = $admin_host . $url;
                 } else {
-			$url = $this->host . '/' . $this->version . $url;
+			$url = $this->host . '/' . $this->api_version . $url;
                 }
 
                 if ($this->auth_type == 'simple') {
@@ -1004,6 +1007,7 @@ class TPerformant {
                         'ssl_verify_host' => false,
                         'follow_redirects' => true
                 ));
+                $req->setHeader('User-Agent', 'TP-PHP-API:'.__CLASS__.'-v'.$this->wrapper_version);
 
                 //authorize
                 $req->setAuth($this->user, $this->pass);
