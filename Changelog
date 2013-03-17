@@ -1,5 +1,7 @@
 Changelog
 =========
+* Sun Mar 17 14:09:50 EST 2013 - Alex Lupu <alexandru.lupu@2parale.ro>
+  - fixed Authentication error when using multiple pages 
 
 * Tue Mar 12 13:21:43 EST 2013 - Tudor Sandu <tudor.sandu@2parale.ro>
   - 0.6 release
