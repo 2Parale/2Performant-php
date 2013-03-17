@@ -1050,10 +1050,12 @@ class TPerformant {
 
                         $this->oauthRequest->setBody($json);
                         $this->oauth->accept($this->oauthRequest);
+                } else {
+                        $params = array();
                 }
                 
                 try {
-                	$response = $this->oauth->sendRequest($url, array(), $method);
+                	$response = $this->oauth->sendRequest($url, $params, $method);
                 } catch(HTTP_OAuth_Exception $e) {
                 	throw new TPException_Connection($this, 'Unable to send OAuth request to API server', $e);
                 }
