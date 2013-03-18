@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.6
+   ver. 0.6.1
    http://help.2performant.com/API
    ================================ */
 
@@ -25,7 +25,7 @@ class TPerformant {
 	var $pass;
     var $host;
     var $api_version = "v1.0";
-    var $wrapper_version = "0.6";
+    var $wrapper_version = "0.6.1";
     var $auth_type;
     var $oauth;
     var $oauthRequest;

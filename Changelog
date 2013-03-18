@@ -1,5 +1,9 @@
 Changelog
 =========
+* Mon Mar 18 14:19:22 EST 2013 - Tudor Sandu <tudor.sandu@2parale.ro>
+  - modified campaigns_listforaffiliate method according to API server changes
+  - tagged v0.6.1
+
 * Sun Mar 17 14:09:50 EST 2013 - Alex Lupu <alexandru.lupu@2parale.ro>
   - fixed Authentication error when using multiple pages 
 
