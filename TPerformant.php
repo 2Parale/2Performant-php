@@ -1,7 +1,7 @@
 <?php
 /* ================================
    2Performant.com Network API 
-   ver. 0.6
+   ver. 0.6.1
    http://help.2performant.com/API
    ================================ */
 
@@ -25,7 +25,7 @@ class TPerformant {
 	var $pass;
     var $host;
     var $api_version = "v1.0";
-    var $wrapper_version = "0.6";
+    var $wrapper_version = "0.6.1";
     var $auth_type;
     var $oauth;
     var $oauthRequest;
@@ -102,8 +102,11 @@ class TPerformant {
         }
 
         /* Affiliates: List campaigns which have the logged in user accepted */
-        function campaigns_listforaffiliate($page=1) {
-            $request['page'] = $page;
+        function campaigns_listforaffiliate($page=false) {
+            if(!$page)
+                $request = array();
+            else
+                $request['page'] = $page;
                 return $this->hook("/campaigns/listforaffiliate.json", "campaign", $request, 'GET');
         }
 
