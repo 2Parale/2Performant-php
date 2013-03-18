@@ -102,8 +102,11 @@ class TPerformant {
         }
 
         /* Affiliates: List campaigns which have the logged in user accepted */
-        function campaigns_listforaffiliate($page=1) {
-            $request['page'] = $page;
+        function campaigns_listforaffiliate($page=false) {
+            if(!$page)
+                $request = array();
+            else
+                $request['page'] = $page;
                 return $this->hook("/campaigns/listforaffiliate.json", "campaign", $request, 'GET');
         }
 
