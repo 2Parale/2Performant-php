@@ -81,11 +81,14 @@ class TPerformant
     /*===========*/
 
     /* List campaigns. Displays the first 6 entries by default. */
-    function campaigns_list( $category_id = null, $page = 1, $perpage = 6 )
+    // $sort = trimester_commissions | commissions | epc | clicks
+    
+    function campaigns_list( $category_id = null, $page = 1, $perpage = 6, $sort = 'trimester_commissions')
     {
         $request['category_id'] = $category_id;
         $request['page']        = $page;
         $request['perpage']     = $perpage;
+        $request['sort']        = $sort;
 
         return $this->hook( "/campaigns.json", "campaign", $request, 'GET' );
     }
