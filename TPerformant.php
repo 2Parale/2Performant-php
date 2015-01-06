@@ -228,7 +228,7 @@ class TPerformant
         $request['year']        = $year;
         $request['page']        = $page;
 
-        return $this->hook( "/commissions/listforadvertiser.json", "campaign", $request, 'GET' );
+        return $this->hook( "/commissions/listforadvertiser.json", "commission", $request, 'GET' );
     }
 
     /* Affiliates: List commissions on campaigns. Month: 01 to 12; Year: 20xx. */
