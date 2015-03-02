@@ -1,8 +1,13 @@
 Changelog
 =========
+
+* Thu Mar 2 09:30:00 EST 2015 - Alexandru - Emil Lupu <alexandru.lupu@2parale.ro>
+  - Quicklink generation used api.yournetwork.tld instead of event.yournetwork.tld
+  - tagged v0.6.3
+
 * Thu Dec 11 17:23:00 EST 2014 - Eyal Blecher <eyal@2parale.ro>
   - replaced 'campaign' to 'commission' expected output in hook call from commissions_listforadvertiser
-  
+
 * Mon Apr 7 10:00:00 EST 2014 - Alexandru - Emil Lupu <alexandru.lupu@2parale.ro>
   - added campaign_affiliate_feeds method to api calls
   - indentation fix

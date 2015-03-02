@@ -1,7 +1,7 @@
 <?php
 /* ================================
 2Performant.com Network API
-ver. 0.6.2
+ver. 0.6.3
 http://help.2performant.com/API
 ================================ */
 
@@ -22,8 +22,9 @@ class TPerformant
     var $user;
     var $pass;
     var $host;
+    var $event_host = null;
     var $api_version = "v1.0";
-    var $wrapper_version = "0.6.2";
+    var $wrapper_version = "0.6.3";
     var $auth_type;
     var $oauth;
     var $oauthRequest;
@@ -82,7 +83,7 @@ class TPerformant
 
     /* List campaigns. Displays the first 6 entries by default. */
     // $sort = trimester_commissions | commissions | epc | clicks
-    
+
     function campaigns_list( $category_id = null, $page = 1, $perpage = 6, $sort = 'trimester_commissions')
     {
         $request['category_id'] = $category_id;
@@ -148,7 +149,10 @@ class TPerformant
     You may need to get some data before using it. */
     function campaign_quicklink( $campaign_id, $aff_code, $redirect )
     {
-        $url = $this->host . "/events/click?ad_type=quicklink&aff_code=" . $aff_code . "&unique=" . $campaign_id . "&redirect_to=" . urlencode( $redirect );
+        if (is_null($this->event_host)) {
+          $this->event_host = str_replace("api.", "event.", $this->host);
+        }
+        $url = $this->event_host . "/events/click?ad_type=quicklink&aff_code=" . $aff_code . "&unique=" . $campaign_id . "&redirect_to=" . urlencode( $redirect );
         if ( $this->auth_type == 'oauth' ) {
             $url = $url . "&app=" . $this->oauth->getToken();
         }
