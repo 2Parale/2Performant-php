@@ -2,6 +2,7 @@
 
 namespace TPerformant\API\Model;
 
+use TPerformant\API\Api;
 use TPerformant\API\HTTP\ApiResult;
 
 abstract class User {
@@ -23,10 +24,7 @@ abstract class User {
     public function __construct($email = '', $password = '') {
         // TODO API call to login
 
-        $result = Api::getInstance()->signIn([
-            'email' => $email,
-            'password' => $password
-        ]);
+        $result = Api::getInstance()->signIn($email, $password);
 
         $this->updateAuthTokens($result);
 

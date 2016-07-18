@@ -2,6 +2,8 @@
 
 namespace TPerformant\API\Model;
 
+use TPerformant\API\Api;
+
 class Affiliate extends User {
     public function __construct($email = '', $password = '') {
         parent::__construct($email, $password);
