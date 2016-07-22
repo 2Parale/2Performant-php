@@ -5,7 +5,7 @@ namespace TPerformant\API\Model;
 class Commission extends GenericEntity {
     protected $id;
     protected $userId;
-    protected $actionId;
+    protected $actionid;
     protected $amount;
     protected $status;
     protected $affrequestId;
@@ -23,10 +23,12 @@ class Commission extends GenericEntity {
     protected $publicActionData = null;
     protected $publicClickData = null;
 
+    /**
+     * @inheritdoc
+     */
     protected function classMap() {
         return array_merge(parent::classMap(), [
             'program' => 'Program'
-            // TODO other fields
         ]);
     }
 }

@@ -18,6 +18,9 @@ class Banner extends GenericEntity {
     protected $markup;
     protected $program;
 
+    /**
+     * @inheritdoc
+     */
     protected function classMap() {
         return [
             'program' => 'Program'

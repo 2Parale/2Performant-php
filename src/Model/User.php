@@ -2,6 +2,9 @@
 
 namespace TPerformant\API\Model;
 
+/**
+ * Generic user continer for API response
+ */
 class User extends GenericEntity {
     protected $id;
     protected $email;
