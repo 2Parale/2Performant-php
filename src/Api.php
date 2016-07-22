@@ -24,16 +24,15 @@ use TPerformant\API\Filter\AffiliateBannerSort;
 
 class Api {
     const WRAPPER_VERSION = '1.0';
+    const API_VERSION = '1';
 
     private $apiUrl;
-    private $apiVersion;
 
     private $http = null;
 
 
-    public function __construct($baseUrl = 'https://api.2performant.com', $apiVersion = 1, $options = []) {
+    public function __construct($baseUrl = 'https://api.2performant.com', $options = []) {
         $this->apiUrl = $baseUrl;
-        $this->apiVersion = $apiVersion;
 
         $httpOptions = [
             'base_uri' => $this->apiUrl,
@@ -43,7 +42,8 @@ class Api {
             ]
         ];
 
-        $httpOptions = array_merge($httpOptions, $options);
+        if(isset($options['http']) && is_array($options['http']))
+            $httpOptions = array_merge($httpOptions, $options['http']);
 
         if(!isset($httpOptions['timeout']) || 0 == $httpOptions['timeout'])
             $httpOptions['timeout'] = 5.0;
@@ -285,7 +285,7 @@ class Api {
         return self::$_api;
     }
 
-    public static function init($baseUrl, $apiVersion = 1, $options = []) {
-        self::$_api = new self($baseUrl, $apiVersion, $options);
+    public static function init($baseUrl, $options = []) {
+        self::$_api = new self($baseUrl, $options);
     }
 }
