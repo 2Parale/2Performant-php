@@ -1,0 +1,28 @@
+{
+    "name": "2Performant/2Performant-PHP",
+    "description": "PHP wrapper for 2Performant API",
+    "type": "library",
+    "keywords": ["2Performant", "API", "PHP", "HTTP", "REST"],
+    "homepage": "http://github.com/2Parale/2Performant-PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tudor Sandu",
+            "email": "tm.sandu@gmail.com",
+            "homepage": "http://tudorsandu.ro",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "support@2performant.com",
+        "docs": "http://doc.2performant.com/"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "~6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "TPerformant\\API\\": "src/"
+        }
+    }
+}
