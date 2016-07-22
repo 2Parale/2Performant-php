@@ -26,7 +26,6 @@ class Commission extends GenericEntity {
     protected function classMap() {
         return array_merge(parent::classMap(), [
             'program' => 'Program'
-            // TODO other fields
         ]);
     }
 }

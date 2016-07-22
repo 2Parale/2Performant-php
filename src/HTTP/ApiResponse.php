@@ -17,7 +17,7 @@ class ApiResponse implements AuthInterface {
         $this->owner = $user;
 
         if(($response->getStatusCode() < 200) || ($response->getStatusCode() >= 300 )) {
-            // TODO throw exception
+            throw new APIException('Unsuccessful API call. Response status: '.$response->getStatusCode(), 0, null, $response);
         }
 
         $data = json_decode($response->getBody());
