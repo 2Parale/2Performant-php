@@ -3,39 +3,63 @@
 
 The API allows you to integrate any 2Performant network in your application. It's goal is to make sure developers can implement anything that can be done via the web interface using API functions.
 
-The API is RESTful XML over HTTP using all four verbs (GET/POST/PUT/DELETE). The PHP implementation is built as an PHP4 class.
+The API is RESTful JSON over HTTP using all four verbs (GET/POST/PUT/DELETE) using [Guzzle](http://docs.guzzlephp.org/en/latest/) as a HTTP client.
 
 API documentation can be found at:
-http://help.2performant.com/API
+http://doc.2performant.com/
+
+The PHP wrapper uses `camelCase` notation rather than the `underscore_notation` used in the HTTP API, but changes are transparent to the user using the wrapper.
 
 
-Some Examples
-=============
+Installation
+============
 
-Interacting with 2Performant networks is very easy.
+It's recommended to install the library using [Composer](http://getcomposer.org/).
 
-First you initialize an object
+        curl -sS https://getcomposer.org/installer | php
 
-        $session = new TPerformant("simple", array("user => "user", "pass" => "pass"), 'http://api.yournetwork.com');
-        // or via OAuth
-        $consumer = new HTTP_OAuth_Consumer($APP_KEY, $APP_SECRET, $oauth_data['token'], $oauth_data['secret']);
-        $obj = new Tperformant("oauth", $consumer, "http://api.yournetwork.com");
+Then, install the library (along with its dependencies)
 
-Afterwards you can call any function from the TPerformant class:
+        php composer.phar require 2Performant/2Performant-php
 
-        // display the last 6 received messages
-        print_r($session->received_messages_list());
+After that, use the composer autoloader in your PHP script
+
+        <?php
+
+        require 'vendor/autoload.php';
+
+All done! Now you can use the classes provided, included in the `TPerformant\API` namespace.
+
+
+Usage Examples
+==============
+
+Interacting with 2Performant is very easy.
+
+First you log in
+
+        // As an advertiser
+        use TPerformant\API\HTTP\Advertiser;
+
+        ...
+
+        $me = new Advertiser('affiliate.manager@somecompany.com', 'password'); // fill in with your own credentials
+
+        $commissions = $me->getCommissions();
+
+        // or as an affiliate
+        use TPerformant\API\HTTP\Affiliate;
+
+        ...
+
+        $me = new Affiliate('awesome.affiliate@affiliatesite.com', 'password'); // fill in with your own credentials
+
+        $commissions = $me->getCommissions();
+
 
 For details about each API function the documentation can be found at:
-http://help.2performant.com/API
+https://github.com/2Parale/2Performant-php/wiki
 
-
-Advanced Applications
-=====================
-
-You can build advanced applications using the 2Performant API and have them distributed over 2Performant App Store. 
-
-Get Started at: http://apps.2performant.com and http://help.2performant.com/Developers-Area
 
 Reporting Problems
 ==================

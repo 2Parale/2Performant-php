@@ -1,5 +1,5 @@
 {
-    "name": "2Parale/2Performant-PHP",
+    "name": "2Performant/2Performant-PHP",
     "description": "PHP wrapper for 2Performant API",
     "type": "library",
     "keywords": ["2Performant", "API", "PHP", "HTTP", "REST"],
