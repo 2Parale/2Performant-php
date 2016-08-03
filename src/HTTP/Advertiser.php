@@ -25,6 +25,17 @@ class Advertiser extends User {
     }
 
     /**
+     * Generate a quicklink in the advertiser's own program
+     * @param  string           $url        The destination URL
+     * @param  Affiliate|string $affiliate  The affiliate for which the quicklink is generated. An Affiliate model or its unique code
+     *
+     * @return string           The quicklink URL
+     */
+    public function getQuicklink($url, $affiliate) {
+        return Api::getInstance()->getQuicklink($url, $affiliate, $this->getMyProgram());
+    }
+
+    /**
      * Get affiliate program list
      * @param  AdvertiserProgramFilter  $filter (optional) Result filtering options
      * @param  AdvertiserProgramSort    $sort   (optional) Result sorting options

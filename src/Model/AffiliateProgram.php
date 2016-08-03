@@ -25,4 +25,14 @@ class AffiliateProgram extends Program {
             (new AffiliateCommissionFilter)->query('program_name:'.$this->getName().' OR campaign_name:'.$this->getName())
         );
     }
+
+    /**
+     * Generate a quicklink in this program for the affiliate who requested it
+     * @param  string   $url    The destination URL
+     *
+     * @return string   The quicklink URL
+     */
+    public function getQuicklink($url) {
+        return $this->requester->getQuicklink($url, $this);
+    }
 }

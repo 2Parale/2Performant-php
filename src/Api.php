@@ -75,6 +75,30 @@ class Api {
         ], 'user');
     }
 
+    /**
+     * Get a quicklink for an affiliate in a program
+     * @param  string           $url        The destination of the quicklink
+     * @param  Affiliate|string $affiliate  The affiliate who owns the quicklink. Either an Affiliate object or its unique code
+     * @param  Program|string   $program    The program for which the quicklink is generated. Either a Program object or its unique code
+     *
+     * @return string           The generated quicklink
+     */
+    public function getQuicklink($url, $affiliate, $program) {
+        $host = preg_replace('/((?:https?\:)?\/\/.*)api((?:\.[a-zA-Z0-9\-]+)*)(\.2performant\.com)/', '$1event$2$3', $this->apiUrl);
+        if(is_a($affiliate, '\\TPerformant\\API\\Model\\Affiliate'))
+            $affiliate = $affiliate->getUniqueCode();
+        if(is_a($program, '\\TPerformant\\API\\Model\\Program'))
+            $program = $program->getUniqueCode();
+
+        return sprintf(
+            '%s/events/click?ad_type=quicklink&aff_code=%s&unique=%s&redirect_to=%s',
+            $host,
+            urlencode($affiliate),
+            urlencode($program),
+            urlencode($url)
+        );
+    }
+
     // Public methods
 
 
