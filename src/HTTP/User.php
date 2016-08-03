@@ -61,6 +61,10 @@ abstract class User implements AuthInterface {
         return $this->userData->getRole();
     }
 
+    public function getUserData() {
+        return $this->userData;
+    }
+
 
     // AuthInterface methods
 
