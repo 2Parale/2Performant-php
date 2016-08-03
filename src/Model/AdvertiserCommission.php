@@ -2,7 +2,16 @@
 
 namespace TPerformant\API\Model;
 
+use TPerformant\API\HTTP\Advertiser;
+
 class AdvertiserCommission extends Commission {
+    /**
+     * @inheritdoc
+     */
+    public function __construct($data, Advertiser $user = null) {
+        parent::__construct($data, $user);
+    }
+
     protected $transactionId;
 
     /**
