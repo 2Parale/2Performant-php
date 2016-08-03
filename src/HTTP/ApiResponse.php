@@ -110,6 +110,15 @@ class ApiResponse implements AuthInterface {
      * @return mixed                The structured data
      */
     private function _convert($data, $expected) {
+        // If we are expecting a user, set the class directly
+        if('user' == $expected && isset($data->role)) {
+            $className = $this->getClassName($data->role);
+
+            if(class_exists($className)) {
+                return new $className($data, $this->owner);
+            }
+        }
+
         // Try AffiliateModelClass first
         if($this->owner && in_array($this->owner->getRole(), ['affiliate', 'advertiser'])) {
             $className = $this->getClassName($this->owner->getRole() . '_' . $expected);
