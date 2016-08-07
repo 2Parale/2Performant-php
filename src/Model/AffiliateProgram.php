@@ -2,14 +2,14 @@
 
 namespace TPerformant\API\Model;
 
-use TPerformant\API\HTTP\Affiliate;
+use TPerformant\API\HTTP\Affiliate as ApiHttpAffiliate;
 use TPerformant\API\Filter\AffiliateCommissionFilter;
 
 class AffiliateProgram extends Program {
     /**
      * @inheritdoc
      */
-    public function __construct($data, Affiliate $user = null) {
+    public function __construct($data, ApiHttpAffiliate $user = null) {
         parent::__construct($data, $user);
     }
 
