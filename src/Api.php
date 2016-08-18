@@ -76,6 +76,15 @@ class Api {
     }
 
     /**
+     * Validate a set of credentials
+     * @param  AuthInterface $auth Authentication credentials
+     * @return User                The user details, if the credentials are correct
+     */
+    public function validateToken(AuthInterface $auth) {
+        return $this->get('/users/validate_token', [], 'user', $auth);
+    }
+
+    /**
      * Get a quicklink for an affiliate in a program
      * @param  string           $url        The destination of the quicklink
      * @param  Affiliate|string $affiliate  The affiliate who owns the quicklink. Either an Affiliate object or its unique code

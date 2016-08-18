@@ -21,22 +21,32 @@ abstract class User implements AuthInterface {
 
     /**
      * Constructor used to sign into the API
-     * @param string $email    Account email
+     * @param mixed  $email    Account email OR SavedSession object
      * @param string $password Account password
      */
     public function __construct($email = '', $password = '') {
-        $result = Api::getInstance()->signIn($email, $password);
+        if($email && $password) {
+            $auth = $this->signIn($email, $password);
 
-        $this->updateAuthTokens($result);
+            $result = $this->updateAuthTokens($auth);
 
-        $this->userData = $result->getBody();
+            $this->userData = $result->getBody();
+        } else {
+            if($email && is_object($email) && is_a($email, '\\TPerformant\\API\\HTTP\\SavedSession')) {
+                $this->updateAuthTokens($email);
+
+                $result = $this->validateToken();
+
+                $this->userData = $result->getBody();
+            }
+        }
     }
 
     /**
      * Use response data to save authentication tokens
      * @param  ApiResponse $result API response
      */
-    public function updateAuthTokens(ApiResponse $result) {
+    public function updateAuthTokens(AuthInterface $result) {
         $this->accessToken = $result->getAccessToken();
         $this->clientToken = $result->getClientToken();
         $this->uid = $result->getUid();
@@ -44,8 +54,8 @@ abstract class User implements AuthInterface {
 
     /**
      * Update authorization tokens and return the expected objects in the API response
-     * @param  ApiResponse $result The parsed API response
-     * @return mixed               The structured API response data
+     * @param  AuthInterface $result The parsed API response
+     * @return mixed                 The structured API response data
      */
     public function updateAuthTokensAndReturn(ApiResponse $result) {
         $this->updateAuthTokens($result);
@@ -83,4 +93,21 @@ abstract class User implements AuthInterface {
 
     // API methods
 
+    /**
+     * Requests a new set of authentication tokens, given the user's email and password
+     * @param  string $email    User email
+     * @param  string $password User password
+     * @return ApiResponse           The user data
+     */
+    public function signIn($email, $password) {
+        return Api::getInstance()->signIn($email, $password);
+    }
+
+    /**
+     * Validate a set of authentication tokens
+     * @return ApiResponse The user details, if the tokens are valid
+     */
+    public function validateToken() {
+        return Api::getInstance()->validateToken($this);
+    }
 }
