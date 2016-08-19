@@ -28,9 +28,7 @@ abstract class User implements AuthInterface {
         if($email && $password) {
             $auth = $this->signIn($email, $password);
 
-            $result = $this->updateAuthTokens($auth);
-
-            $this->userData = $result->getBody();
+            $this->userData = $this->updateAuthTokensAndReturn($auth);
         } else {
             if($email && is_object($email) && is_a($email, '\\TPerformant\\API\\HTTP\\SavedSession')) {
                 $this->updateAuthTokens($email);
