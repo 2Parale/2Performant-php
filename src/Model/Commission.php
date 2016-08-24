@@ -6,6 +6,7 @@ class Commission extends GenericEntity {
     protected $id;
     protected $userId;
     protected $actionid;
+    protected $actiontype;
     protected $amount;
     protected $status;
     protected $affrequestId;
