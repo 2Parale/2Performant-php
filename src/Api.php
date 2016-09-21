@@ -411,21 +411,15 @@ class Api {
 
         try {
             $response = $this->http->request($method, $url, $requestOptions);
-        } catch(\GuzzleHttp\Exception\ConnectException $e) {
-            throw new ConnectionException($e->getMessage(), 0, $e);
+        } catch(\GuzzleHttp\Exception\ServerException $e) {
+            throw \TPerformant\API\Exception\ServerException::create($e);
         } catch(\GuzzleHttp\Exception\BadResponseException $e) {
-            $message = 'API responded with an error: '.$e->getCode();
-
-            $response = json_decode($e->getResponse()->getBody());
-            if($response && $response->errors) {
-                $message = [];
-                foreach ($response->errors as $error) {
-                    $message[] = $error->title;
-                }
-
-                $message = 'API responded with code ' . $e->getResponse()->getStatusCode() . ' and the following error(s): ' . implode(', ', $message);
-            }
-            throw new APIException($message, $e->getCode(), $e);
+            // do nothing, validation will be performed later
+            $response = $e->getResponse();
+        } catch(\GuzzleHttp\Exception\ConnectException $e) {
+            throw \TPerformant\API\Exception\ConnectionException::create($e);
+        } catch(\GuzzleHttp\Exception\TransferException $e) {
+            throw new \TPerformant\API\Exception\TransferException($e->getMessage(), $e->getCode());
         }
 
         return new ApiResponse($response, $expected, $auth);

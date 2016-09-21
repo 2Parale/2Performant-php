@@ -4,6 +4,7 @@ namespace TPerformant\API\HTTP;
 
 use TPerformant\API\Api;
 use TPerformant\API\Exception\APIException;
+use TPerformant\API\Exception\TPException;
 use TPerformant\API\Filter\AdvertiserProgramFilter;
 use TPerformant\API\Filter\AdvertiserProgramSort;
 use TPerformant\API\Filter\AdvertiserCommissionFilter;

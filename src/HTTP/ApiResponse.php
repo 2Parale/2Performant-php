@@ -3,6 +3,8 @@
 namespace TPerformant\API\HTTP;
 
 use TPerformant\API\Exception\APIException;
+use TPerformant\API\Exception\ClientException;
+use TPerformant\API\Exception\InvalidResponseException;
 use TPerformant\API\HTTP\User;
 use TPerformant\API\Model\AffiliateProgram;
 
@@ -26,18 +28,107 @@ class ApiResponse implements AuthInterface {
         $this->rawResponse = $response;
         $this->owner = $user;
 
-        if(($response->getStatusCode() < 200) || ($response->getStatusCode() >= 300 )) {
-            throw new APIException('Unsuccessful API call. Response status: '.$response->getStatusCode(), 0, null, $response);
-        }
+        $response = self::validateResponse($response);
 
         $data = json_decode($response->getBody());
 
         if(isset($data->metadata)) {
             $this->meta = $data->metadata;
             unset($data->metadata);
+
+            if(isset($this->meta->deprecations) && (is_array($this->meta->deprecations) || $this->meta->deprecations instanceof Traversable)) {
+                foreach($this->meta->deprecations as $deprecation) {
+                    $message = '';
+                    if(isset($deprecation->title)) {
+                        $message .= $deprecation->title . ' ';
+                    }
+                    if(isset($deprecation->detail)) {
+                        $message .= $deprecation->detail . ' ';
+                    }
+
+                    trigger_error($message, E_USER_DEPRECATED);
+                }
+            }
+        }
+
+        if(!isset($data->$expected)) {
+            throw new InvalidResponseException(
+                sprintf('Response does not contain expected property (%s)', $expected)
+            );
         }
 
         $this->body = $this->_convert($data->$expected, $expected);
+    }
+
+    /**
+     * Checks if a HTTP response is a valid API response
+     * @param  PsrHttpMessageResponseInterface $response The response to check
+     * @return PsrHttpMessageResponseInterface           The same response
+     * @throws InvalidResponseException
+     */
+    public static function validateResponse(\Psr\Http\Message\ResponseInterface $response) {
+        $data = json_decode($response->getBody());
+
+        if($response->getStatusCode() >= 400 && $response->getStatusCode() < 500) {
+            if(false === $data || !is_object($data)) {
+                throw new ClientException('Your request returned an error: '.$response->getStatusCode().' '.$response->getReasonPhrase(), $response->getStatusCode());
+            }
+        }
+
+        if(($response->getStatusCode() < 200) || ($response->getStatusCode() >= 300 && $response->getStatusCode() < 400) || ($response->getStatusCode() >= 500)) {
+            throw new APIException('Unsuccessful API call. Response status: '.$response->getStatusCode().' '.$response->getReasonPhrase(), $response->getStatusCode(), null, $response);
+        }
+
+        if(null === $data && $response->getStatusCode() <> 204) {
+            $body = $response->getBody();
+            $summary = '';
+
+            if ($body->isSeekable()) {
+                $size = $body->getSize();
+                $summary = $body->read(120);
+                $body->rewind();
+
+                if ($size > 120 && strlen($summary) > 120) {
+                    $summary .= ' (truncated...)';
+                }
+
+                // Matches any printable character, including unicode characters:
+                // letters, marks, numbers, punctuation, spacing, and separators.
+                if (preg_match('/[^\pL\pM\pN\pP\pS\pZ\n\r\t]/', $summary)) {
+                    $summary = '';
+                }
+            }
+
+            $summary = $summary ? ' Body: ' . $summary : '';
+
+            throw new InvalidResponseException('Response body must be valid JSON.'.$summary, 0, null, $response->getBody());
+        }
+
+        if($data && isset($data->errors) && (is_array($data->errors) || $data->errors instanceof Traversable)) {
+            $message = [];
+            foreach ($data->errors as $error) {
+                $m = $error->title;
+                if(isset($error->detail)) {
+                    $m .= ' - ' . $error->detail;
+                }
+                if(isset($error->source) && $error->source instanceof Traversable) {
+                    $source = [];
+                    foreach($error->source as $k => $v) {
+                        $source[] = $k.':'.$v;
+                    }
+                    if($source) {
+                        $m .= ' ('.implode(';', $source).')';
+                    }
+                }
+
+                $message[] = $m;
+            }
+
+            $message = 'API responded with code ' . $response->getStatusCode() . ' and the following error(s): ' . implode(', ', $message);
+            throw new APIException($message, $response->getStatusCode());
+        }
+
+        return $response;
     }
 
     /**
