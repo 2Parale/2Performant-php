@@ -27,7 +27,7 @@ use TPerformant\API\Filter\AffiliateBannerSort;
  */
 class Api {
     const WRAPPER_VERSION = '1.0';
-    const API_VERSION = '1';
+    const API_VERSION = '1.0.1';
 
     private $apiUrl;
 
@@ -199,18 +199,31 @@ class Api {
      * @param  AuthInterface    $auth           The authentication token container
      * @param  int|string       $id             The commission's ID
      * @param  string           $reason         A reason for the modification
-     * @param  int|float        $newAmount      The new commission amount, in EUR
+     * @param  int|float|Array  $newAmount      The new commission amount. If numeric, currency is considered to be EUR. If array, it must have `amount` and `currencyCode`
      * @param  string           $newDescription (optional) The new commission description, if it's the case
      *
      * @return ApiResponse
      */
     public function editAdvertiserCommission(AuthInterface $auth, $id, $reason, $newAmount, $newDescription = null) {
+        if(is_numeric($newAmount)) {
+            $newAmount = [
+                'amount' => $newAmount,
+                'currencyCode' => null
+            ];
+        } else {
+            if(!is_array($newAmount)) {
+                throw new TPException('Fourth argument of Api::editAdvertiserCommission() must be a number or an array');
+            }
+        }
+
         $params = [
             'commission' => [
-                'current_reason' => $reason,
-                'amount' => $newAmount
+                'reason' => $reason,
+                'amount' => $newAmount['amount'],
+                'currency_code' => $newAmount['currencyCode'] ?: 'EUR'
             ]
         ];
+
         if($newDescription) {
             $params['commission']['description'] = $newDescription;
         }
