@@ -60,6 +60,11 @@ First you log in
 For details about each API function the documentation can be found at:
 https://github.com/2Parale/2Performant-php/wiki
 
+Commom issues
+=============
+
+If you encounter issues with SSL (certificate-related connection problems), please try [updating your cURL CA root certificates](https://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/).
+
 
 Reporting Problems
 ==================
