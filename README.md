@@ -20,7 +20,7 @@ It's recommended to install the library using [Composer](http://getcomposer.org/
 
 Then, install the library (along with its dependencies)
 
-        php composer.phar require 2Performant/2Performant-php
+        php composer.phar require 2Performant/2Performant-php:dev-master
 
 After that, use the composer autoloader in your PHP script
 
