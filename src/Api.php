@@ -21,6 +21,8 @@ use TPerformant\API\Filter\AffiliateProductFilter;
 use TPerformant\API\Filter\AffiliateProductSort;
 use TPerformant\API\Filter\AffiliateBannerFilter;
 use TPerformant\API\Filter\AffiliateBannerSort;
+use TPerformant\API\Filter\AffiliateAdvertiserPromotionFilter;
+use TPerformant\API\Filter\AffiliateAdvertiserPromotionSort;
 
 /**
  * API wrapper class
@@ -386,6 +388,25 @@ class Api {
             $params = array_merge($params, $sort->toParams());
 
         return $this->get('/affiliate/banners', $params, 'banners', $auth);
+    }
+
+    /**
+     * Get promotions as an affiliate
+     * @param  AuthInterface            $auth   The authentication token container
+     * @param  AffiliateAdvertiserPromotionFilter    $filter (optional) Result filtering options
+     * @param  AffiliateAdvertiserPromotionSort      $sort   (optional) Result sorting options
+     *
+     * @return ApiResponse
+     */
+    public function getAffiliatePromotions(AuthInterface $auth, AffiliateAdvertiserPromotionFilter $filter = null, AffiliateAdvertiserPromotionSort $sort = null) {
+        $params = [];
+        if($filter)
+            $params = array_merge($params, $filter->toParams());
+
+        if($sort)
+            $params = array_merge($params, $sort->toParams());
+
+        return $this->get('/affiliate/advertiser_promotions', $params, 'advertiser_promotions', $auth);
     }
 
 

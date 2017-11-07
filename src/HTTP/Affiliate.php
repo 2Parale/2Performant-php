@@ -14,6 +14,8 @@ use TPerformant\API\Filter\AffiliateProductFilter;
 use TPerformant\API\Filter\AffiliateProductSort;
 use TPerformant\API\Filter\AffiliateBannerFilter;
 use TPerformant\API\Filter\AffiliateBannerSort;
+use TPerformant\API\Filter\AffiliateAdvertiserPromotionFilter;
+use TPerformant\API\Filter\AffiliateAdvertiserPromotionSort;
 
 /**
  * Authentication/authorization class for affiliates
@@ -115,5 +117,16 @@ class Affiliate extends User {
      */
     public function getBanners(AffiliateBannerFilter $filter = null, AffiliateBannerSort $sort = null) {
         return $this->updateAuthTokensAndReturn(Api::getInstance()->getAffiliateBanners($this, $filter, $sort));
+    }
+
+    /**
+     * Get promotions
+     * @param  AffiliateAdvertiserPromotionFilter    $filter (optional) Result filtering options
+     * @param  AffiliateAdvertiserPromotionSort      $sort   (optional) Result sorting options
+     *
+     * @return AffiliateAdvertiserPromotion[]|AdvertiserPromotion[]
+     */
+    public function getPromotions(AffiliateAdvertiserPromotionFilter $filter = null, AffiliateAdvertiserPromotionSort $sort = null) {
+        return $this->updateAuthTokensAndReturn(Api::getInstance()->getAffiliatePromotions($this, $filter, $sort));
     }
 }
