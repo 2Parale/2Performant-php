@@ -22,7 +22,7 @@ class Program extends GenericEntity {
     protected $currency;
     protected $enableLeads;
     protected $enableSales;
-    protected $defaultLeadCommissionRate;
+    protected $defaultLeadCommissionAmount;
     protected $defaultLeadCommissionType;
     protected $defaultSaleCommissionRate;
     protected $defaultSaleCommissionType;
