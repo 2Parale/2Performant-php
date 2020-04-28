@@ -9,7 +9,8 @@ class CommissionSort extends CollectionSort {
             'date' => 'date',
             'commission' => 'commission',
             'sale' => 'sale',
-            'username' => 'username'
+            'username' => 'username',
+            'updated' => 'updated'
         ];
     }
 }
