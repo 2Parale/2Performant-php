@@ -77,4 +77,16 @@ class AdvertiserCommission extends Commission {
     public function reject($reason) {
         return $this->requester->rejectCommission($this->id, $reason);
     }
+
+    /**
+     * Update this commission's sale amount
+     * @param  string  $amount        The new amount of the sale
+     * @param  string  $currencyCode  The currency code (e.g. "EUR")
+     * @param  string  $reason        The reason why changes are made on the sale
+     *
+     * @return Sale    The updated sale data
+     */
+    public function updateSale($amount, $currencyCode, $reason) {
+        return $this->requester->updateSaleCommission($this->id, $amount, $currencyCode, $reason);
+    }
 }

@@ -153,4 +153,17 @@ class Advertiser extends User {
     public function rejectCommission($id, $reason) {
         return $this->updateAuthTokensAndReturn(Api::getInstance()->rejectAdvertiserCommission($this, $id, $reason));
     }
+
+    /**
+     * Update a sale commission's amount
+     * @param  int|string  $id            The commission's ID
+     * @param  string      $amount        The new amount of the sale
+     * @param  string      $currencyCode  The currency code of the sale (e.g. "EUR")
+     * @param  string      $reason        The reason why changes are made on the sale
+     *
+     * @return \TPerformant\API\Model\Sale  The updated sale data
+     */
+    public function updateSaleCommission($id, $amount, $currencyCode, $reason) {
+        return $this->updateAuthTokensAndReturn(Api::getInstance()->updateAdvertiserSaleCommission($this, $id, $amount, $currencyCode, $reason));
+    }
 }
