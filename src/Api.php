@@ -269,6 +269,28 @@ class Api {
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/reject', $params, 'commission', $auth);
     }
 
+    /**
+     * Update a sale commission's amount as an advertiser
+     * @param  AuthInterface    $auth          The authentication token container
+     * @param  int|string       $id            The commission's ID
+     * @param  string           $amount        The new amount of the sale
+     * @param  string           $currencyCode  The currency code of the sale
+     * @param  string           $reason        The reason why changes are made on the sale
+     *
+     * @return ApiResponse
+     */
+    public function updateAdvertiserSaleCommission(AuthInterface $auth, $id, $amount, $currencyCode, $reason) {
+        $params = [
+            'sale' => [
+                'amount' => $amount,
+                'currency_code' => $currencyCode,
+                'reason' => $reason
+            ]
+        ];
+
+        return $this->put('/advertiser/programs/default/commissions/'.$id.'/update_sale', $params, 'sale', $auth);
+    }
+
 
     // Affiliate methods
 
