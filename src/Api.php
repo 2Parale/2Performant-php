@@ -432,6 +432,33 @@ class Api {
     }
 
 
+    /**
+     * Report lost orders as an affiliate by uploading a CSV file
+     * @param  AuthInterface $auth      The authentication token container
+     * @param  string        $filePath  Path to the CSV file containing lost orders.
+     *                                  The CSV must have headers: campaign_unique, order_date,
+     *                                  order_id, description, order_value, click_tag
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function createAffiliateLostOrders(AuthInterface $auth, $filePath) {
+        $this->validateCsvFile($filePath, [
+            'campaign_unique', 'order_date', 'order_id',
+            'description', 'order_value', 'click_tag'
+        ]);
+        
+        $multipart = [
+            [
+                'name' => 'source_file',
+                'contents' => fopen($filePath, 'r'),
+                'filename' => basename($filePath)
+            ]
+        ];
+
+        return $this->requestMultipart('POST', '/affiliate/lost_orders', $multipart, $auth);
+    }
+
+
     // General request method
 
     /**
@@ -479,6 +506,76 @@ class Api {
         }
 
         return new ApiResponse($response, $expected, $auth);
+    }
+
+    /**
+     * Make a multipart/form-data API request (file upload)
+     *
+     * Unlike request(), this method does not go through ApiResponse because
+     * file upload endpoints may return non-standard response formats (e.g. a
+     * plain JSON array instead of a keyed object).
+     *
+     * @param  string           $method     HTTP method (POST, PUT, etc.)
+     * @param  string           $route      The API endpoint to be requested
+     * @param  array            $multipart  Guzzle-compatible multipart form data
+     * @param  AuthInterface    $auth       The authentication token container
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function requestMultipart($method, $route, array $multipart, AuthInterface $auth = null) {
+        $url = $this->getUrl($route);
+
+        $body = new \GuzzleHttp\Psr7\MultipartStream($multipart);
+
+        $requestOptions = [
+            'headers' => [
+                'Content-Type' => 'multipart/form-data; boundary=' . $body->getBoundary()
+            ],
+            'body' => $body
+        ];
+
+        if($auth) {
+            $requestOptions['headers'] = [
+                'access-token' => $auth->getAccessToken(),
+                'client' => $auth->getClientToken(),
+                'uid' => $auth->getUid()
+            ];
+        }
+
+        try {
+            $response = $this->http->request($method, $url, $requestOptions);
+        } catch(\GuzzleHttp\Exception\ServerException $e) {
+            throw \TPerformant\API\Exception\ServerException::create($e);
+        } catch(\GuzzleHttp\Exception\BadResponseException $e) {
+            $response = $e->getResponse();
+        } catch(\GuzzleHttp\Exception\ConnectException $e) {
+            throw \TPerformant\API\Exception\ConnectionException::create($e);
+        } catch(\GuzzleHttp\Exception\TransferException $e) {
+            throw new \TPerformant\API\Exception\TransferException($e->getMessage(), $e->getCode());
+        }
+
+        $statusCode = $response->getStatusCode();
+
+        if($statusCode >= 400) {
+            $data = json_decode((string) $response->getBody(), true);
+            $errors = isset($data['errors']) ? $data['errors'] : [$response->getReasonPhrase()];
+
+            $messages = [];
+            foreach($errors as $error) {
+                if(is_string($error)) {
+                    $messages[] = $error;
+                } elseif(is_array($error)) {
+                    $messages[] = isset($error['title']) ? $error['title'] : (isset($error['error']) ? $error['error'] : json_encode($error));
+                }
+            }
+
+            throw new APIException(
+                'API responded with code ' . $statusCode . ': ' . implode(', ', $messages),
+                $statusCode
+            );
+        }
+
+        return $response;
     }
 
     /**
@@ -574,5 +671,39 @@ class Api {
      */
     public static function init($baseUrl, $options = []) {
         self::$_api = new self($baseUrl, $options);
+    }
+
+    // validations
+
+    /**
+     * Validate a CSV file
+     * @param  string $filePath Path to the CSV file
+     * @param  array $requiredHeaders Required headers
+     * @return void
+     */
+    private function validateCsvFile($filePath, array $requiredHeaders) {
+        if (!is_file($filePath) || !is_readable($filePath)) {
+            throw new \InvalidArgumentException(
+                sprintf('File not found or not readable: %s', $filePath)
+            );
+        }
+    
+        $handle = fopen($filePath, 'r');
+        $firstLine = fgetcsv($handle);
+        fclose($handle);
+    
+        if ($firstLine === false) {
+            throw new \InvalidArgumentException(
+                sprintf('Unable to parse CSV headers from: %s', $filePath)
+            );
+        }
+    
+        $missing = array_diff($requiredHeaders, array_map('trim', $firstLine));
+    
+        if (!empty($missing)) {
+            throw new \InvalidArgumentException(
+                sprintf('CSV is missing required headers: %s', implode(', ', $missing))
+            );
+        }
     }
 }
