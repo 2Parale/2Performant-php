@@ -535,11 +535,9 @@ class Api {
         ];
 
         if($auth) {
-            $requestOptions['headers'] = [
-                'access-token' => $auth->getAccessToken(),
-                'client' => $auth->getClientToken(),
-                'uid' => $auth->getUid()
-            ];
+            $requestOptions['headers']['access-token'] = $auth->getAccessToken();
+            $requestOptions['headers']['client'] = $auth->getClientToken();
+            $requestOptions['headers']['uid'] = $auth->getUid();
         }
 
         try {
