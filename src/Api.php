@@ -446,16 +446,25 @@ class Api {
             'campaign_unique', 'order_date', 'order_id',
             'description', 'order_value', 'click_tag'
         ]);
-        
+
+        $file = fopen($filePath, 'r');
+
         $multipart = [
             [
                 'name' => 'source_file',
-                'contents' => fopen($filePath, 'r'),
+                'contents' => $file,
                 'filename' => basename($filePath)
             ]
         ];
 
-        return $this->requestMultipart('POST', '/affiliate/lost_orders', $multipart, $auth);
+        try{
+            return $this->requestMultipart('POST', '/affiliate/lost_orders', $multipart, $auth);
+        }
+        finally {
+            if(is_resource($file)) {
+                fclose($file);
+            }
+        }
     }
 
 
