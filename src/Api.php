@@ -565,7 +565,7 @@ class Api {
 
         if($statusCode >= 400) {
             $data = json_decode((string) $response->getBody(), true);
-            $errors = isset($data['errors']) ? $data['errors'] : [$response->getReasonPhrase()];
+            $errors = is_array($data) && isset($data['errors']) ? $data['errors'] : [$response->getReasonPhrase()];
 
             $messages = [];
             foreach($errors as $error) {
