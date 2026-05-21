@@ -696,6 +696,12 @@ class Api {
         }
     
         $handle = fopen($filePath, 'r');
+        if ($handle === false) {
+            throw new \InvalidArgumentException(
+                sprintf('Unable to open file: %s for reading', $filePath)
+            );
+        }
+
         $firstLine = fgetcsv($handle);
         fclose($handle);
     
