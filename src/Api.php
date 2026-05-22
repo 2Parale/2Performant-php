@@ -433,6 +433,27 @@ class Api {
 
 
     /**
+     * Export promotions as CSV as an affiliate
+     * Returns CSV with promotions published by advertisers. Respects
+     * the same filter params as getAffiliatePromotions but ignores pagination.
+     * @param  AuthInterface                         $auth   The authentication token container
+     * @param  AffiliateAdvertiserPromotionFilter    $filter (optional) Result filtering options
+     * @param  AffiliateAdvertiserPromotionSort      $sort   (optional) Result sorting options
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function getAffiliatePromotionsExport(AuthInterface $auth, AffiliateAdvertiserPromotionFilter $filter = null, AffiliateAdvertiserPromotionSort $sort = null) {
+        $params = [];
+        if($filter)
+            $params = array_merge($params, $filter->toParams());
+
+        if($sort)
+            $params = array_merge($params, $sort->toParams());
+
+        return $this->requestRaw('GET', '/affiliate/advertiser_promotions/export', $params, $auth);
+    }
+
+    /**
      * Report lost orders as an affiliate by uploading a CSV file
      * @param  AuthInterface $auth      The authentication token container
      * @param  string        $filePath  Path to the CSV file containing lost orders.
@@ -501,18 +522,7 @@ class Api {
             $requestOptions['json'] = $params;
         }
 
-        try {
-            $response = $this->http->request($method, $url, $requestOptions);
-        } catch(\GuzzleHttp\Exception\ServerException $e) {
-            throw \TPerformant\API\Exception\ServerException::create($e);
-        } catch(\GuzzleHttp\Exception\BadResponseException $e) {
-            // do nothing, validation will be performed later
-            $response = $e->getResponse();
-        } catch(\GuzzleHttp\Exception\ConnectException $e) {
-            throw \TPerformant\API\Exception\ConnectionException::create($e);
-        } catch(\GuzzleHttp\Exception\TransferException $e) {
-            throw new \TPerformant\API\Exception\TransferException($e->getMessage(), $e->getCode());
-        }
+        $response = $this->executeRequest($method, $url, $requestOptions);
 
         return new ApiResponse($response, $expected, $auth);
     }
@@ -549,6 +559,65 @@ class Api {
             $requestOptions['headers']['uid'] = $auth->getUid();
         }
 
+        $response = $this->executeRequest($method, $url, $requestOptions);
+
+        $this->throwOnErrorResponse($response);
+
+        return $response;
+    }
+
+    /**
+     * Make a raw API request that returns non-JSON responses (e.g. CSV exports)
+     *
+     * Unlike request(), this method does not wrap the response in ApiResponse,
+     * returning the raw PSR-7 response instead.
+     *
+     * @param  string           $method     HTTP method (GET, POST, etc.)
+     * @param  string           $route      The API endpoint to be requested
+     * @param  array            $params     Associative array of parameters
+     * @param  AuthInterface    $auth       The authentication token container
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function requestRaw($method, $route, array $params = [], AuthInterface $auth = null) {
+        $url = $this->getUrl($route);
+
+        $requestOptions = [];
+
+        if($auth) {
+            $requestOptions['headers'] = [
+                'access-token' => $auth->getAccessToken(),
+                'client' => $auth->getClientToken(),
+                'uid' => $auth->getUid()
+            ];
+        }
+
+        if('GET' === $method) {
+            $requestOptions['query'] = $params;
+        } else {
+            $requestOptions['json'] = $params;
+        }
+
+        $response = $this->executeRequest($method, $url, $requestOptions);
+
+        $this->throwOnErrorResponse($response);
+
+        return $response;
+    }
+
+    /**
+     * Execute a request and handle exceptions
+     * @param  string           $method     HTTP method (GET, POST, etc.)
+     * @param  string           $url        The URL to be requested
+     * @param  array            $requestOptions     Request options
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     *
+     * @throws \TPerformant\API\Exception\ServerException
+     * @throws \TPerformant\API\Exception\ConnectionException
+     * @throws \TPerformant\API\Exception\TransferException
+     */
+    private function executeRequest($method, $url, $requestOptions) {
         try {
             $response = $this->http->request($method, $url, $requestOptions);
         } catch(\GuzzleHttp\Exception\ServerException $e) {
@@ -561,6 +630,18 @@ class Api {
             throw new \TPerformant\API\Exception\TransferException($e->getMessage(), $e->getCode());
         }
 
+        return $response;
+    }
+
+    /**
+     * Throw an exception if the response is an error
+     * @param  \Psr\Http\Message\ResponseInterface $response The response to check
+     *
+     * @return void
+     *
+     * @throws \TPerformant\API\Exception\APIException
+     */
+    private function throwOnErrorResponse($response) {
         $statusCode = $response->getStatusCode();
 
         if($statusCode >= 400) {
@@ -581,8 +662,6 @@ class Api {
                 $statusCode
             );
         }
-
-        return $response;
     }
 
     /**
