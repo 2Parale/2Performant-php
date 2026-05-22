@@ -41,8 +41,17 @@ class CreateAffiliateLostOrdersTest extends TestCase
     {
         $mock = new MockHandler($responses);
         $handlerStack = HandlerStack::create($mock);
+    
+        $handlerStack->push(function (callable $handler) {
+            return function (\Psr\Http\Message\RequestInterface $request, array $options) use ($handler) {
+                $contents = $request->getBody()->getContents();
+                $request = $request->withBody(\GuzzleHttp\Psr7\Utils::streamFor($contents));
+                return $handler($request, $options);
+            };
+        }, 'buffer_body');
+    
         $handlerStack->push(Middleware::history($this->requestHistory));
-
+    
         return new Api('https://api.2performant.com', [
             'http' => ['handler' => $handlerStack],
         ]);
