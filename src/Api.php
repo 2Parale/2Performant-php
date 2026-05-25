@@ -444,9 +444,10 @@ class Api {
      */
     public function getAffiliatePromotionsExport(AuthInterface $auth, AffiliateAdvertiserPromotionFilter $filter = null, AffiliateAdvertiserPromotionSort $sort = null) {
         $params = [];
-        if($filter)
+        if($filter) {
             $params = array_merge($params, $filter->toParams());
-
+            unset($params['page'], $params['perpage']);
+        }
         if($sort)
             $params = array_merge($params, $sort->toParams());
 

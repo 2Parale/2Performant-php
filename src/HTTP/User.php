@@ -62,6 +62,19 @@ abstract class User implements AuthInterface {
     }
 
     /**
+     * Update authorization tokens from a raw PSR-7 response
+     * @param  \Psr\Http\Message\ResponseInterface $response The raw API response
+     */
+    protected function updateAuthTokensFromResponse(\Psr\Http\Message\ResponseInterface $response) {
+        $session = new SavedSession(
+            $response->hasHeader('access-token') ? $response->getHeader('access-token')[0] : $this->getAccessToken(),
+            $response->hasHeader('client') ? $response->getHeader('client')[0] : $this->getClientToken(),
+            $response->hasHeader('uid') ? $response->getHeader('uid')[0] : $this->getUid()
+        );
+        $this->updateAuthTokens($session);
+    }
+
+    /**
      * Get role (affiliate/advertiser) of the user corresponding to the authentication token
      * @return string User role
      */
