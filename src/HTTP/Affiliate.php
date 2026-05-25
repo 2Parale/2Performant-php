@@ -156,7 +156,7 @@ class Affiliate extends User {
     public function createLostOrders($filePath) {
         $response = Api::getInstance()->createAffiliateLostOrders($this, $filePath);
 
-       $this->updateAuthTokensFromResponse($response);
+        $this->updateAuthTokensFromResponse($response);
 
         return json_decode((string) $response->getBody());
     }
