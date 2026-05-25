@@ -163,9 +163,12 @@ class GetAffiliatePromotionsExportTest extends TestCase
         $filter->page(2)->perpage(10);
 
         $api->getAffiliatePromotionsExport($this->createMockAffiliate(), $filter);
-
-        $response = $this->requestHistory[0]['response'];
-        $this->assertSame(200, $response->getStatusCode());
+        
+        $request = $this->requestHistory[0]['request'];
+        $query = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        $this->assertArrayNotHasKey('page', $query);
+        $this->assertArrayNotHasKey('perpage', $query);
     }
 
     // --- Success Response ---
