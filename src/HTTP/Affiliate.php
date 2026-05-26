@@ -131,6 +131,21 @@ class Affiliate extends User {
     }
 
     /**
+     * Get promotions export
+     * @param  AffiliateAdvertiserPromotionFilter    $filter (optional) Result filtering options
+     * @param  AffiliateAdvertiserPromotionSort      $sort   (optional) Result sorting options
+     *
+     * @return string The promotions export CSV content
+     */
+    public function getPromotionsExport(AffiliateAdvertiserPromotionFilter $filter = null, AffiliateAdvertiserPromotionSort $sort = null) {
+        $response = Api::getInstance()->getAffiliatePromotionsExport($this, $filter, $sort);
+
+        $this->updateAuthTokensFromResponse($response);
+
+        return (string) $response->getBody();
+    }
+
+    /**
      * Report lost orders by uploading a CSV file
      * @param  string $filePath Path to the CSV file containing lost orders.
      *                          The CSV must have headers: campaign_unique, order_date,
@@ -141,12 +156,7 @@ class Affiliate extends User {
     public function createLostOrders($filePath) {
         $response = Api::getInstance()->createAffiliateLostOrders($this, $filePath);
 
-        $session = new SavedSession(
-            $response->hasHeader('access-token') ? $response->getHeader('access-token') : $this->getAccessToken(),
-            $response->hasHeader('client') ? $response->getHeader('client') : $this->getClientToken(),
-            $response->hasHeader('uid') ? $response->getHeader('uid') : $this->getUid()
-        );
-        $this->updateAuthTokens($session);
+        $this->updateAuthTokensFromResponse($response);
 
         return json_decode((string) $response->getBody());
     }
