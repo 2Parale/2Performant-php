@@ -160,4 +160,19 @@ class Affiliate extends User {
 
         return json_decode((string) $response->getBody());
     }
+
+    /**
+     * Generate Google Ads linker tracking settings
+     * @param  array $trackingInfo Tracking information items. Each item must contain
+     *                            a 'url' key and may optionally contain 'stats_tags'
+     *
+     * @return array The tracking settings for each URL
+     */
+    public function createGoogleAdsLinkerTrackingSettings(array $trackingInfo) {
+        $response = Api::getInstance()->createAffiliateGoogleAdsLinkerTrackingSettings($this, $trackingInfo);
+
+        $this->updateAuthTokensFromResponse($response);
+
+        return json_decode((string) $response->getBody());
+    }
 }

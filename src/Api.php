@@ -489,6 +489,22 @@ class Api {
         }
     }
 
+    /**
+     * Generate Google Ads linker tracking settings as an affiliate
+     * @param  AuthInterface $auth          The authentication token container
+     * @param  array         $trackingInfo  Tracking information items. Each item must contain
+     *                                      a 'url' key and may optionally contain 'stats_tags'
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function createAffiliateGoogleAdsLinkerTrackingSettings(AuthInterface $auth, array $trackingInfo) {
+        $params = [
+            'tracking_info' => $trackingInfo
+        ];
+
+        return $this->requestRaw('POST', '/affiliate/google_ads_linker/tracking_settings', $params, $auth);
+    }
+
 
     // General request method
 
@@ -657,6 +673,8 @@ class Api {
                     $m = isset($error['title']) ? $error['title'] : (isset($error['error']) ? $error['error'] : json_encode($error));
                     if(isset($error['detail'])) {
                         $m .= ' - ' . $error['detail'];
+                    } elseif(isset($error['details'])) {
+                        $m .= ' - ' . $error['details'];
                     }
                     $messages[] = $m;
                 }
