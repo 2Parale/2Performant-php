@@ -654,7 +654,11 @@ class Api {
                 if(is_string($error)) {
                     $messages[] = $error;
                 } elseif(is_array($error)) {
-                    $messages[] = isset($error['title']) ? $error['title'] : (isset($error['error']) ? $error['error'] : json_encode($error));
+                    $m = isset($error['title']) ? $error['title'] : (isset($error['error']) ? $error['error'] : json_encode($error));
+                    if(isset($error['detail'])) {
+                        $m .= ' - ' . $error['detail'];
+                    }
+                    $messages[] = $m;
                 }
             }
 
