@@ -831,8 +831,8 @@ class Api {
         }
 
         foreach($trackingInfo as $item) {
-            if(!isset($item['url'])) {
-                throw new \InvalidArgumentException('Each tracking info item must contain a "url" key');
+            if(!is_array($item) || !isset($item['url']) || !is_string($item['url']) || trim($item['url']) === '') {
+                throw new \InvalidArgumentException('Each tracking info item must be an array and contain a "url" key that is a non-empty string');
             }
         }
     }
