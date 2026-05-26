@@ -14,6 +14,13 @@ class CreateAffiliateGoogleAdsLinkerTrackingSettingsTest extends TestCase
 {
     private array $requestHistory = [];
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->requestHistory = [];
+    }
+
     private function createApiWithMockHttp(array $responses): Api
     {
         $mock = new MockHandler($responses);
@@ -58,6 +65,82 @@ class CreateAffiliateGoogleAdsLinkerTrackingSettingsTest extends TestCase
                 'url_suffix' => '2pau=e5442c1ed&2ptt=quicklink&2ptu=184f69294&2pdlst={gclid}&utm_source=2parale&utm_medium=quicklink&utm_campaign=e5442c1ed',
             ],
         ]);
+    }
+
+    public function testThrowsExceptionForEmptyTrackingInfo(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(201, [], $this->successResponseBody()),
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/trackingInfo must not be empty/');
+
+        $api->createAffiliateGoogleAdsLinkerTrackingSettings(
+            $this->createMockAffiliate(),
+            []
+        );
+    }
+
+    public function testThrowsExceptionForMissingUrl(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(201, [], $this->successResponseBody()),
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Each tracking info item must be an array and contain a "url" key/');
+
+        $api->createAffiliateGoogleAdsLinkerTrackingSettings(
+            $this->createMockAffiliate(),
+            [['stats_tags' => 'tag1']]
+        );
+    }
+
+    public function testThrowsExceptionForEmptyUrl(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(201, [], $this->successResponseBody()),
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Each tracking info item must be an array and contain a "url" key/');
+
+        $api->createAffiliateGoogleAdsLinkerTrackingSettings(
+            $this->createMockAffiliate(),
+            [['url' => '   ']]
+        );
+    }
+
+    public function testThrowsExceptionForNonArrayItem(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(201, [], $this->successResponseBody()),
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Each tracking info item must be an array and contain a "url" key/');
+
+        $api->createAffiliateGoogleAdsLinkerTrackingSettings(
+            $this->createMockAffiliate(),
+            ['url1.com']
+        );
+    }
+
+    public function testValidationDoesNotMakeHttpRequest(): void
+    {
+        $api = $this->createApiWithMockHttp([]);
+
+        try {
+            $api->createAffiliateGoogleAdsLinkerTrackingSettings(
+                $this->createMockAffiliate(),
+                []
+            );
+        } catch (\InvalidArgumentException $e) {
+            // expected
+        }
+
+        $this->assertCount(0, $this->requestHistory);
     }
 
     // --- HTTP Request ---
