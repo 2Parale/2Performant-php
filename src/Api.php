@@ -498,6 +498,8 @@ class Api {
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function createAffiliateGoogleAdsLinkerTrackingSettings(AuthInterface $auth, array $trackingInfo) {
+        $this->validateTrackingInfo($trackingInfo);
+
         $params = [
             'tracking_info' => $trackingInfo
         ];
@@ -819,6 +821,19 @@ class Api {
             throw new \InvalidArgumentException(
                 sprintf('CSV is missing required headers: %s', implode(', ', $missing))
             );
+        }
+    }
+
+    private function validateTrackingInfo(array $trackingInfo) {
+
+        if (empty($trackingInfo)) {
+            throw new \InvalidArgumentException('trackingInfo must not be empty');
+        }
+
+        foreach($trackingInfo as $item) {
+            if(!isset($item['url'])) {
+                throw new \InvalidArgumentException('Each tracking info item must contain a "url" key');
+            }
         }
     }
 }
