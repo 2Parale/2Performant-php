@@ -489,6 +489,24 @@ class Api {
         }
     }
 
+    /**
+     * Generate Google Ads linker tracking settings as an affiliate
+     * @param  AuthInterface $auth          The authentication token container
+     * @param  array         $trackingInfo  Tracking information items. Each item must contain
+     *                                      a 'url' key and may optionally contain 'stats_tags'
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function createAffiliateGoogleAdsLinkerTrackingSettings(AuthInterface $auth, array $trackingInfo) {
+        $this->validateTrackingInfo($trackingInfo);
+
+        $params = [
+            'tracking_info' => $trackingInfo
+        ];
+
+        return $this->requestRaw('POST', '/affiliate/google_ads_linker/tracking_settings', $params, $auth);
+    }
+
 
     // General request method
 
@@ -657,6 +675,8 @@ class Api {
                     $m = isset($error['title']) ? $error['title'] : (isset($error['error']) ? $error['error'] : json_encode($error));
                     if(isset($error['detail'])) {
                         $m .= ' - ' . $error['detail'];
+                    } elseif(isset($error['details'])) {
+                        $m .= ' - ' . $error['details'];
                     }
                     $messages[] = $m;
                 }
@@ -801,6 +821,19 @@ class Api {
             throw new \InvalidArgumentException(
                 sprintf('CSV is missing required headers: %s', implode(', ', $missing))
             );
+        }
+    }
+
+    private function validateTrackingInfo(array $trackingInfo) {
+
+        if (empty($trackingInfo)) {
+            throw new \InvalidArgumentException('trackingInfo must not be empty');
+        }
+
+        foreach($trackingInfo as $item) {
+            if(!is_array($item) || !isset($item['url']) || !is_string($item['url']) || trim($item['url']) === '') {
+                throw new \InvalidArgumentException('Each tracking info item must be an array and contain a "url" key that is a non-empty string');
+            }
         }
     }
 }
