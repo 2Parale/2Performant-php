@@ -36,7 +36,7 @@ class ApiResponse implements AuthInterface {
             $this->meta = $data->metadata;
             unset($data->metadata);
 
-            if(isset($this->meta->deprecations) && (is_array($this->meta->deprecations) || $this->meta->deprecations instanceof Traversable)) {
+            if(isset($this->meta->deprecations) && (is_array($this->meta->deprecations) || $this->meta->deprecations instanceof \Traversable)) {
                 foreach($this->meta->deprecations as $deprecation) {
                     $message = '';
                     if(isset($deprecation->title)) {
@@ -104,14 +104,14 @@ class ApiResponse implements AuthInterface {
             throw new InvalidResponseException('Response body must be valid JSON.'.$summary, 0, null, $response->getBody());
         }
 
-        if($data && isset($data->errors) && (is_array($data->errors) || $data->errors instanceof Traversable)) {
+        if($data && isset($data->errors) && (is_array($data->errors) || $data->errors instanceof \Traversable)) {
             $message = [];
             foreach ($data->errors as $error) {
                 $m = $error->title;
                 if(isset($error->detail)) {
                     $m .= ' - ' . $error->detail;
                 }
-                if(isset($error->source) && $error->source instanceof Traversable) {
+                if(isset($error->source) && $error->source instanceof \Traversable) {
                     $source = [];
                     foreach($error->source as $k => $v) {
                         $source[] = $k.':'.$v;
