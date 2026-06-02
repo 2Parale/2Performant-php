@@ -4,6 +4,7 @@ namespace TPerformant\API;
 
 use GuzzleHttp\Client as HTTPClient;
 use TPerformant\API\Exception\ConnectionException;
+use TPerformant\API\Exception\TPException;
 use TPerformant\API\Exception\APIException;
 use TPerformant\API\HTTP\ApiResponse;
 use TPerformant\API\HTTP\AuthInterface;
