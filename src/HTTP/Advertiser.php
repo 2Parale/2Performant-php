@@ -9,6 +9,7 @@ use TPerformant\API\Filter\AdvertiserProgramFilter;
 use TPerformant\API\Filter\AdvertiserProgramSort;
 use TPerformant\API\Filter\AdvertiserCommissionFilter;
 use TPerformant\API\Filter\AdvertiserCommissionSort;
+use TPerformant\API\Model\Affiliate;
 
 /**
  * Authentication/authorization class for advertisers
@@ -101,15 +102,15 @@ class Advertiser extends User {
 
     /**
      * Create a manual commission for an affiliate
-     * @param  int|string       $affiliateId The affiliate's ID
-     * @param  int|float        $amount      The commission amount, in EUR
-     * @param  string           $description The commission's description
+     * @param  int|string|Affiliate       $affiliate   The affiliate or affiliate's ID
+     * @param  int|float                  $amount      The commission amount, in EUR
+     * @param  string                     $description The commission's description
      *
      * @return AdvertiserCommission
      */
     public function createCommission($affiliate, $amount, $description) {
         if(!is_numeric($affiliate)) {
-            if(is_object($affiliate) && is_subclass_of($affiliate, __NAMESPACE__ . '\\Affiliate')) {
+            if(is_object($affiliate) && is_subclass_of($affiliate, '\\TPerformant\\API\\Model\\Affiliate')) {
                 $affiliate = $affiliate->getId();
             } else {
                 throw new TPException('First parameter must be an affiliate ID or an Affiliate object');
