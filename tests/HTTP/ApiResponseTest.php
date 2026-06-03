@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use TPerformant\API\Exception\APIException;
 
 class ApiResponseTest extends TestCase {
-    public function testValidateResponseParsesErrorsFromArrayObject(): void
+    public function testValidateResponseParsesErrorsFromArray(): void
     {
         $errors = [
             ['title' => 'Validation failed', 'detail' => 'Amount invalid'],

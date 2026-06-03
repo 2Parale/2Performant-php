@@ -15,7 +15,7 @@ class AffiliateProgramGetCommissionsTest extends TestCase
             ->expects($this->once())
             ->method('getCommissions')
             ->with($this->callback(function ($filter) {
-                $params = $filter->toParams(); // or however CollectionFilter exposes params
+                $params = $filter->toParams();
                 $this->assertStringContainsString('program_name:My Program', $params['filter']['query']);
                 $this->assertStringContainsString('campaign_name:My Program', $params['filter']['query']);
                 return true;

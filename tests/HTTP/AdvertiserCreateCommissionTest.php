@@ -5,7 +5,6 @@ namespace TPerformant\API\Tests\HTTP;
 use PHPUnit\Framework\TestCase;
 use TPerformant\API\Exception\TPException;
 use TPerformant\API\HTTP\Advertiser;
-use TPerformant\API\Model\Affiliate as ModelAffiliate;
 
 class AdvertiserCreateCommissionTest extends TestCase
 {

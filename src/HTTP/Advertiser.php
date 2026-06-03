@@ -110,7 +110,7 @@ class Advertiser extends User {
      */
     public function createCommission($affiliate, $amount, $description) {
         if(!is_numeric($affiliate)) {
-            if(is_object($affiliate) && is_a($affiliate, '\\TPerformant\\API\\Model\\Affiliate')) {
+            if(is_object($affiliate) && $affiliate instanceof Affiliate) {
                 $affiliate = $affiliate->getId();
             } else {
                 throw new TPException('First parameter must be an affiliate ID or an Affiliate object');
