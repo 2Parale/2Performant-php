@@ -21,7 +21,7 @@ class AffiliateProgram extends Program {
      * @return AffiliateCommission[]|Commission[]
      */
     public function getCommissions() {
-        return $this->owner->getCommissions(
+        return $this->requester->getCommissions(
             (new AffiliateCommissionFilter)->query('program_name:'.$this->getName().' OR campaign_name:'.$this->getName())
         );
     }

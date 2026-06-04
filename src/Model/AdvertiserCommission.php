@@ -3,6 +3,7 @@
 namespace TPerformant\API\Model;
 
 use TPerformant\API\HTTP\Advertiser as ApiHttpAdvertiser;
+use TPerformant\API\Exception\TPException;
 
 class AdvertiserCommission extends Commission {
     /**
