@@ -309,6 +309,8 @@ class Api {
             ]
         ];
 
+        $this->validateId($id, __FUNCTION__);
+
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/update_sale', $params, 'sale', $auth);
     }
 

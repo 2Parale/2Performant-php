@@ -191,4 +191,28 @@ class UpdateAdvertiserSaleCommissionTest extends TestCase
 
         $api->updateAdvertiserSaleCommission($this->createMockAdvertiser(), 1, '10', 'EUR', 'test');
     }
+
+    public function testSendsRequestWhenIdProvided(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(200, [], $this->saleResponseBody()),
+        ]);
+
+        $api->updateAdvertiserSaleCommission($this->createMockAdvertiser(), 555, '20', 'EUR', 'test');
+
+        $request = $this->requestHistory[0]['request'];
+        $this->assertStringContainsString('/commissions/555/update_sale', $request->getUri()->getPath());
+    }
+
+    public function testThrowsExceptionWhenIdIsInvalid(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(200, [], $this->saleResponseBody()),
+        ]);
+
+        $this->expectException(\TPerformant\API\Exception\TPException::class);
+        $this->expectExceptionMessageMatches('/Second argument of Api::updateAdvertiserSaleCommission/');
+
+        $api->updateAdvertiserSaleCommission($this->createMockAdvertiser(), true, '20', 'EUR', 'test');
+    }
 }
