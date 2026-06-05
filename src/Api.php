@@ -150,14 +150,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserProgram(AuthInterface $auth, $id) {
-        
-        if ( is_bool($id) || 
-            !is_scalar($id) ||
-            (is_string($id) && trim($id) === '') ||
-            (is_numeric($id) && $id < 0) ||
-            (is_string($id) && !ctype_alnum($id)) ) {
-            throw new TPException('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
-        }
+        $this->validateId($id);
         return $this->get('/advertiser/programs/'.$id, [], 'program', $auth);
     }
 
@@ -188,6 +181,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserCommission(AuthInterface $auth, $id) {
+        $this->validateId($id);
         return $this->get('/advertiser/programs/default/commissions/'.$id, [], 'commission', $auth);
     }
 
@@ -856,6 +850,16 @@ class Api {
             if(!is_array($item) || !isset($item['url']) || !is_string($item['url']) || trim($item['url']) === '') {
                 throw new \InvalidArgumentException('Each tracking info item must be an array and contain a "url" key that is a non-empty string');
             }
+        }
+    }
+
+    private function validateId($id) {
+        if ( is_bool($id) || 
+            !is_scalar($id) ||
+            (is_string($id) && trim($id) === '') ||
+            (is_numeric($id) && $id < 0) ||
+            (is_string($id) && !ctype_alnum($id)) ) {
+            throw new TPException('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
         }
     }
 }
