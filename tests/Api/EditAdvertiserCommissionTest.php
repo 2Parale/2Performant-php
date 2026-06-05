@@ -69,17 +69,5 @@ class EditAdvertiserCommissionTest extends TestCase {
 
         $this->expectException(\TPerformant\API\Exception\TPException::class);
         $api->editAdvertiserCommission($this->createMockAdvertiser(), '', 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
-        
-        $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), [], 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
-        
-        $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), -3, 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
-        
-        $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), '/foo', 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
-        
-        $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), true, 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
     }   
 }

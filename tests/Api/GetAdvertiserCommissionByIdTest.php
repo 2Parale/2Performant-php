@@ -58,29 +58,10 @@ class GetAdvertiserCommissionByIdTest extends TestCase
             new Response(200, [], json_encode(['commission' => ['id' => 'abc123']])),
         ]);
 
-        $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
-
-        $api->getAdvertiserCommission($this->createMockAdvertiser(), true);
-        
-        $this->expectException(TPException::class);        
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
-
-        $api->getAdvertiserCommission($this->createMockAdvertiser(), []);
         
         $this->expectException(TPException::class);
         $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
 
         $api->getAdvertiserCommission($this->createMockAdvertiser(), "/foo");
-        
-        $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
-
-        $api->getAdvertiserCommission($this->createMockAdvertiser(), -1);
-        
-        $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
-
-        $api->getAdvertiserCommission($this->createMockAdvertiser(), "");
     }
 }

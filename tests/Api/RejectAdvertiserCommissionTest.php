@@ -11,7 +11,7 @@ use TPerformant\API\Api;
 use TPerformant\API\HTTP\Advertiser;
 use TPerformant\API\Exception\TPException;
 
-class GetAdvertiserProgramByIdTest extends TestCase
+class RejectAdvertiserCommissionTest extends TestCase
 {
     private array $requestHistory = [];
 
@@ -36,31 +36,31 @@ class GetAdvertiserProgramByIdTest extends TestCase
         return $advertiser;
     }
 
-    public function testGetAdvertiserProgramByIdSendsGetRequestWithCorrectUrl(): void
+    public function testRejectAdvertiserCommissionSendsPutRequestWithCorrectUrl(): void
     {
         $api = $this->createApiWithMockHttp([
-            new Response(200, [], json_encode(['program' => ['id' => 'abc123']])),
+            new Response(200, [], json_encode(['commission' => ['id' => 'abc123']])),
         ]);
 
-        $api->getAdvertiserProgram($this->createMockAdvertiser(), 'abc123');
+        $api->rejectAdvertiserCommission($this->createMockAdvertiser(), 'abc123', 'Some reason');
 
         $request = $this->requestHistory[0]['request'];
-        $this->assertSame('GET', $request->getMethod());
+        $this->assertSame('PUT', $request->getMethod());
         $this->assertSame(
-            '/advertiser/programs/abc123.json',
+            '/advertiser/programs/default/commissions/abc123/reject.json',
             $request->getUri()->getPath()
         );
     }
 
-    public function testGetAdvertiserProgramByIdRaisesExceptionForInvalidId(): void
+    public function testRejectAdvertiserCommissionByIdRaisesExceptionForInvalidId(): void
     {
         $api = $this->createApiWithMockHttp([
-            new Response(200, [], json_encode(['program' => ['id' => 'abc123']])),
+            new Response(200, [], json_encode(['commission' => ['id' => 'abc123']])),
         ]);
 
         $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
+        $this->expectExceptionMessage('Second argument of Api::rejectAdvertiserCommission() should be interpolated safely to a string and not be boolean');
 
-        $api->getAdvertiserProgram($this->createMockAdvertiser(), -1);
+        $api->rejectAdvertiserCommission($this->createMockAdvertiser(), true, 'Some reason');
     }
 }
