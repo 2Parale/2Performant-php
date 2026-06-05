@@ -150,7 +150,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserProgram(AuthInterface $auth, $id) {
-        $this->validateId($id, 'getAdvertiserProgram');
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/advertiser/programs/'.$id, [], 'program', $auth);
     }
 
@@ -181,7 +181,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserCommission(AuthInterface $auth, $id) {
-        $this->validateId($id, 'getAdvertiserCommission');
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/advertiser/programs/default/commissions/'.$id, [], 'commission', $auth);
     }
 
@@ -244,6 +244,8 @@ class Api {
         if($newDescription) {
             $params['commission']['description'] = $newDescription;
         }
+
+        $this->validateId($id, __FUNCTION__);
 
         return $this->put('/advertiser/programs/default/commissions/'.$id, $params, 'commission', $auth);
     }
