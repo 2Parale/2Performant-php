@@ -191,10 +191,11 @@ class Api {
      * @param  int|string       $affiliateId The affiliate's ID
      * @param  int|float        $amount      The commission amount, in EUR
      * @param  string           $description The commission's description
+     * @param  string           $currencyCode (optional) The commission's currency code
      *
      * @return ApiResponse
      */
-    public function createAdvertiserCommission(AuthInterface $auth, $affiliateId, $amount, $description) {
+    public function createAdvertiserCommission(AuthInterface $auth, $affiliateId, $amount, $description, $currencyCode = null) {
         $params = [
             'commission' => [
                 'user_id' => $affiliateId,
@@ -202,6 +203,10 @@ class Api {
                 'description' => $description
             ]
         ];
+
+        if($currencyCode && is_string($currencyCode) && strlen(trim($currencyCode)) === 3) {
+            $params['commission']['currency_code'] = trim($currencyCode);
+        }
 
         return $this->post('/advertiser/programs/default/commissions', $params, 'commission', $auth);
     }
