@@ -44,7 +44,8 @@ class Api {
      */
     public function __construct($baseUrl = 'https://api.2performant.com', $options = []) {
        
-        $scheme = strtolower(parse_url($baseUrl, PHP_URL_SCHEME) ?? '');
+        $scheme = parse_url($baseUrl, PHP_URL_SCHEME);
+        $scheme = is_string($scheme) ? strtolower($scheme) : '';
         if ($scheme !== 'https') {
             throw new \InvalidArgumentException('Base URL must use the HTTPS scheme');
         }

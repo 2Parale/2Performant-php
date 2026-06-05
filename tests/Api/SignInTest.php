@@ -15,7 +15,7 @@ class SignInTest extends TestCase
     // -----------------------------------------------------------------------
 
     /**
-     * Returns an [Api, &$capturedOptions] pair.
+     * Returns an Api instance and populates &$capturedOptions (by reference).
      * The spy handler captures the *effective* per-request Guzzle options
      * (after client-defaults are merged) so we can assert on debug suppression.
      */
@@ -75,10 +75,14 @@ class SignInTest extends TestCase
         $debugStream = fopen('php://temp', 'r+');
 
         try {
-            $mock = new \GuzzleHttp\Handler\MockHandler([
-                new Response(200, [], $this->signInResponse()),
-            ]);
-            $stack = HandlerStack::create($mock);
+            $handler = function (\Psr\Http\Message\RequestInterface $request, array $options) {
+                 $debug = $options['debug'] ?? false;
+                 if ($debug !== false && is_resource($debug)) {
+                     fwrite($debug, (string) $request->getBody());
+                 }
+                 return new FulfilledPromise(new Response(200, [], $this->signInResponse()));
+             };
+             $stack = HandlerStack::create($handler);
 
             $api = new Api('https://api.2performant.com', [
                 'http' => ['handler' => $stack, 'debug' => $debugStream],
