@@ -150,6 +150,14 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserProgram(AuthInterface $auth, $id) {
+        
+        if ( is_bool($id) || 
+            !is_scalar($id) ||
+            (is_string($id) && trim($id) === '') ||
+            (is_numeric($id) && $id < 0) ||
+            (is_string($id) && !ctype_alnum($id)) ) {
+            throw new TPException('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
+        }
         return $this->get('/advertiser/programs/'.$id, [], 'program', $auth);
     }
 
