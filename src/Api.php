@@ -43,6 +43,13 @@ class Api {
      * @param array $options    Configuration options
      */
     public function __construct($baseUrl = 'https://api.2performant.com', $options = []) {
+       
+        $scheme = parse_url($baseUrl, PHP_URL_SCHEME);
+        $scheme = is_string($scheme) ? strtolower($scheme) : '';
+        if ($scheme !== 'https') {
+            throw new \InvalidArgumentException('Base URL must use the HTTPS scheme');
+        }
+
         $this->apiUrl = $baseUrl;
 
         $httpOptions = [
@@ -75,7 +82,7 @@ class Api {
                 'email' => $email,
                 'password' => $password
             ]
-        ], 'user');
+        ], 'user', null, true);
     }
 
     /**
@@ -518,10 +525,11 @@ class Api {
      * @param  array            $params     Associative array of parameters
      * @param  string           $expected   Expected object key in response hash
      * @param  AuthInterface    $auth       The authentication token container. Not needed for sign in requests
+     * @param  bool             $sensitive  Whether the request contains sensitive information that should not be included in debug logs
      *
      * @return ApiResponse
      */
-    public function request($method, $route, $params, $expected, AuthInterface $auth = null) {
+    public function request($method, $route, $params, $expected, AuthInterface $auth = null, $sensitive = false) {
         $url = $this->getUrl($route);
 
         $requestOptions = [];
@@ -542,7 +550,7 @@ class Api {
             $requestOptions['json'] = $params;
         }
 
-        $response = $this->executeRequest($method, $url, $requestOptions);
+        $response = $this->executeRequest($method, $url, $requestOptions, $sensitive);
 
         return new ApiResponse($response, $expected, $auth);
     }
@@ -630,6 +638,7 @@ class Api {
      * @param  string           $method     HTTP method (GET, POST, etc.)
      * @param  string           $url        The URL to be requested
      * @param  array            $requestOptions     Request options
+     * @param  bool             $sensitive  Whether the request contains sensitive information that should not be included in debug logs
      *
      * @return \Psr\Http\Message\ResponseInterface
      *
@@ -637,7 +646,10 @@ class Api {
      * @throws \TPerformant\API\Exception\ConnectionException
      * @throws \TPerformant\API\Exception\TransferException
      */
-    private function executeRequest($method, $url, $requestOptions) {
+    private function executeRequest($method, $url, $requestOptions, $sensitive = false) {
+        if($sensitive) {
+            $requestOptions['debug'] = false;
+        }
         try {
             $response = $this->http->request($method, $url, $requestOptions);
         } catch(\GuzzleHttp\Exception\ServerException $e) {
@@ -709,11 +721,12 @@ class Api {
      * @param  array            $params     Associative array of parameters
      * @param  string           $expected   Expected object key in response hash
      * @param  AuthInterface    $auth       The authentication token container. Not needed for sign in requests
+     * @param  bool             $sensitive  Whether the request contains sensitive information that should not be included in debug logs
      *
      * @return ApiResponse
      */
-    public function post($route, $params, $expected, AuthInterface $auth = null) {
-        return $this->request('POST', $route, $params, $expected, $auth);
+    public function post($route, $params, $expected, AuthInterface $auth = null, $sensitive = false) {
+        return $this->request('POST', $route, $params, $expected, $auth, $sensitive);
     }
 
     /**
