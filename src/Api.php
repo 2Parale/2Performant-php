@@ -150,7 +150,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserProgram(AuthInterface $auth, $id) {
-        $this->validateId($id);
+        $this->validateId($id, 'getAdvertiserProgram');
         return $this->get('/advertiser/programs/'.$id, [], 'program', $auth);
     }
 
@@ -181,7 +181,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserCommission(AuthInterface $auth, $id) {
-        $this->validateId($id);
+        $this->validateId($id, 'getAdvertiserCommission');
         return $this->get('/advertiser/programs/default/commissions/'.$id, [], 'commission', $auth);
     }
 
@@ -858,13 +858,13 @@ class Api {
         }
     }
 
-    private function validateId($id) {
+    private function validateId($id, $callerName = '') {
         if ( is_bool($id) || 
             !is_scalar($id) ||
             (is_string($id) && trim($id) === '') ||
             (is_numeric($id) && $id < 0) ||
             (is_string($id) && !ctype_alnum($id)) ) {
-            throw new TPException('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
+            throw new TPException(sprintf('Second argument of Api::%s() should be interpolated safely to a string and not be boolean', $callerName));
         }
     }
 }
