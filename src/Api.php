@@ -265,6 +265,8 @@ class Api {
             ]
         ];
 
+        $this->validateId($id, __FUNCTION__);
+
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/accept', $params, 'commission', $auth);
     }
 
