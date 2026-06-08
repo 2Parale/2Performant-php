@@ -356,6 +356,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateRequest(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/affiliate/programs/'.$id.'/me', [], 'affrequest', $auth);
     }
 
