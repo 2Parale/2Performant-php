@@ -344,6 +344,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateProgram(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/affiliate/programs/'.$id, [], 'program', $auth);
     }
 
@@ -870,8 +871,8 @@ class Api {
         if ( is_bool($id) || 
             !is_scalar($id) ||
             (is_string($id) && trim($id) === '') ||
-            (is_numeric($id) && $id < 0) ||
-            (is_string($id) && !ctype_alnum($id)) ) {
+            (is_numeric($id) && ($id != (int)$id || $id <= 0)) ||
+            (is_string($id) && !preg_match('/^[a-zA-Z0-9_-]+$/', $id)) ) {
             throw new TPException(sprintf('Second argument of Api::%s() should be interpolated safely to a string and not be boolean', $callerName));
         }
     }
