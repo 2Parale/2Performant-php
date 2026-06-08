@@ -365,16 +365,22 @@ class Api {
      * @param  AuthInterface                $auth   The authentication token container
      * @param  AffiliateCommissionFilter    $filter (optional) Result filtering options
      * @param  AffiliateCommissionSort      $sort   (optional) Result sorting options
+     * @param  int|string                   $id     (optional) The program's ID or slug to filter commissions by a specific program
      *
      * @return ApiResponse
      */
-    public function getAffiliateCommissions(AuthInterface $auth, AffiliateCommissionFilter $filter = null, AffiliateCommissionSort $sort = null) {
+    public function getAffiliateCommissions(AuthInterface $auth, AffiliateCommissionFilter $filter = null, AffiliateCommissionSort $sort = null, $id = null) {
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
 
         if($sort)
             $params = array_merge($params, $sort->toParams());
+
+        if($id !== null) {
+            $this->validateId($id, __FUNCTION__);
+            $params['program_id'] = $id;
+        }
 
         return $this->get('/affiliate/commissions', $params, 'commissions', $auth);
     }
