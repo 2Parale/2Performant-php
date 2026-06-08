@@ -429,16 +429,22 @@ class Api {
      * @param  AuthInterface            $auth   The authentication token container
      * @param  AffiliateBannerFilter    $filter (optional) Result filtering options
      * @param  AffiliateBannerSort      $sort   (optional) Result sorting options
+     * @param  int|string               $id     (optional) The banner's ID or slug to filter banners by a specific banner
      *
      * @return ApiResponse
      */
-    public function getAffiliateBanners(AuthInterface $auth, AffiliateBannerFilter $filter = null, AffiliateBannerSort $sort = null) {
+    public function getAffiliateBanners(AuthInterface $auth, AffiliateBannerFilter $filter = null, AffiliateBannerSort $sort = null, $id = null) {
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
 
         if($sort)
             $params = array_merge($params, $sort->toParams());
+
+        if($id !== null) {
+            $this->validateId($id, __FUNCTION__);
+            $params['banner_id'] = $id;
+        }
 
         return $this->get('/affiliate/banners', $params, 'banners', $auth);
     }
