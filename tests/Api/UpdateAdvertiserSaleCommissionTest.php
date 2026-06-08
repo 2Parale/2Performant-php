@@ -211,7 +211,7 @@ class UpdateAdvertiserSaleCommissionTest extends TestCase
         ]);
 
         $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $this->expectExceptionMessageMatches('/Second argument of Api::updateAdvertiserSaleCommission/');
+        $this->expectExceptionMessageMatches('/Second argument of Api::updateAdvertiserSaleCommission\(\) should be interpolated safely to a string and not be boolean/');
 
         $api->updateAdvertiserSaleCommission($this->createMockAdvertiser(), true, '20', 'EUR', 'test');
     }
