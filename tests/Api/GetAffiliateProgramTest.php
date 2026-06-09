@@ -37,7 +37,7 @@ class GetAffiliateProgramTest extends TestCase
         return $affiliate;
     }
 
-    public function testGetAffiliateProgramByIdSendsPutRequestWithCorrectUrl(): void
+    public function testGetAffiliateProgramByIdSendsGetRequestWithCorrectUrl(): void
     {
         $api = $this->createApiWithMockHttp([
             new Response(200, [], json_encode(['program' => ['id' => 'abc123']])),

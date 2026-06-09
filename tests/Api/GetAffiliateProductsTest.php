@@ -37,7 +37,7 @@ class GetAffiliateProductsTest extends TestCase
         return $affiliate;
     }
 
-    public function testGetAffiliateProductsByIdSendsPutRequestWithCorrectUrl(): void
+    public function testGetAffiliateProductsByIdSendsGetRequestWithCorrectUrl(): void
     {
         $api = $this->createApiWithMockHttp([
             new Response(200, [], json_encode(['products' => [['id' => 'abc123']]])),
