@@ -47,7 +47,7 @@ class EditAdvertiserCommissionTest extends TestCase {
             new Response(200, [], json_encode(['commission' => ['id' => 1]])),
         ]);
 
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), 123, 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
+        $api->editAdvertiserCommission($this->createMockAdvertiser(), 123, 'no reason', ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
 
         $request = $this->requestHistory[0]['request'];
         $this->assertSame('PUT', $request->getMethod());
@@ -68,6 +68,6 @@ class EditAdvertiserCommissionTest extends TestCase {
         ]);
 
         $this->expectException(\TPerformant\API\Exception\TPException::class);
-        $api->editAdvertiserCommission($this->createMockAdvertiser(), '', 15.50, ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
+        $api->editAdvertiserCommission($this->createMockAdvertiser(), '', 'no reason', ["amount" => 15.50, "currencyCode" => "EUR"], 'Updated description');
     }   
 }
