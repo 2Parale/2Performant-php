@@ -222,6 +222,8 @@ class Api {
      * @return ApiResponse
      */
     public function editAdvertiserCommission(AuthInterface $auth, $id, $reason, $newAmount, $newDescription = null) {
+        $this->validateId($id, __FUNCTION__);
+
         if(is_numeric($newAmount)) {
             $newAmount = [
                 'amount' => $newAmount,
@@ -245,8 +247,6 @@ class Api {
             $params['commission']['description'] = $newDescription;
         }
 
-        $this->validateId($id, __FUNCTION__);
-
         return $this->put('/advertiser/programs/default/commissions/'.$id, $params, 'commission', $auth);
     }
 
@@ -259,13 +259,12 @@ class Api {
      * @return ApiResponse
      */
     public function acceptAdvertiserCommission(AuthInterface $auth, $id, $reason = '') {
+        $this->validateId($id, __FUNCTION__);
         $params = [
             'commission' => [
                 'current_reason' => $reason
             ]
         ];
-
-        $this->validateId($id, __FUNCTION__);
 
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/accept', $params, 'commission', $auth);
     }
@@ -279,13 +278,13 @@ class Api {
      * @return ApiResponse
      */
     public function rejectAdvertiserCommission(AuthInterface $auth, $id, $reason) {
+        $this->validateId($id, __FUNCTION__);
+
         $params = [
             'commission' => [
                 'current_reason' => $reason
             ]
         ];
-
-        $this->validateId($id, __FUNCTION__);
 
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/reject', $params, 'commission', $auth);
     }
@@ -301,6 +300,8 @@ class Api {
      * @return ApiResponse
      */
     public function updateAdvertiserSaleCommission(AuthInterface $auth, $id, $amount, $currencyCode, $reason) {
+        $this->validateId($id, __FUNCTION__);
+        
         $params = [
             'sale' => [
                 'amount' => $amount,
@@ -308,8 +309,6 @@ class Api {
                 'reason' => $reason
             ]
         ];
-
-        $this->validateId($id, __FUNCTION__);
 
         return $this->put('/advertiser/programs/default/commissions/'.$id.'/update_sale', $params, 'sale', $auth);
     }
