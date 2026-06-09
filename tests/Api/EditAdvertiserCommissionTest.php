@@ -61,7 +61,7 @@ class EditAdvertiserCommissionTest extends TestCase {
         $this->assertSame('Updated description', $body['commission']['description']);
     }
 
-    public function testsEditAdvertiserCommissionWithInvalidIdRaisesException(): void
+    public function testEditAdvertiserCommissionWithInvalidIdRaisesException(): void
     {
         $api = $this->createApiWithMockHttp([
             new Response(200, [], json_encode(['commission' => ['id' => 1]])),
