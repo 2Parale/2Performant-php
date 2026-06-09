@@ -414,6 +414,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateProducts(AuthInterface $auth, $id, AffiliateProductFilter $filter = null, AffiliateProductSort $sort = null) {
+        $this->validateId($id, __FUNCTION__);
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
@@ -886,7 +887,7 @@ class Api {
             (is_string($id) && trim($id) === '') ||
             (is_numeric($id) && ($id != (int)$id || $id <= 0)) ||
             (is_string($id) && !preg_match('/^[a-zA-Z0-9_-]+$/', $id)) ) {
-            throw new TPException(sprintf('Second argument of Api::%s() should be interpolated safely to a string and not be boolean', $callerName));
+            throw new TPException(sprintf('Parameter id passed to Api::%s() must be a positive integer or an alphanumeric slug.', $callerName));
         }
     }
 }

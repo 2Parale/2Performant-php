@@ -59,7 +59,7 @@ class GetAdvertiserProgramByIdTest extends TestCase
         ]);
 
         $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserProgram() should be interpolated safely to a string and not be boolean');
+        $this->expectExceptionMessage('Parameter id passed to Api::getAdvertiserProgram() must be a positive integer or an alphanumeric slug.');
 
         $api->getAdvertiserProgram($this->createMockAdvertiser(), -1);
     }

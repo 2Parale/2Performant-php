@@ -11,7 +11,7 @@ use TPerformant\API\Api;
 use TPerformant\API\HTTP\Affiliate;
 use TPerformant\API\Exception\TPException;
 
-class GetAffiliateRequestTest extends TestCase
+class GetAffiliateProductsTest extends TestCase
 {
     private array $requestHistory = [];
 
@@ -37,31 +37,31 @@ class GetAffiliateRequestTest extends TestCase
         return $affiliate;
     }
 
-    public function testGetAffiliateRequestSendsPutRequestWithCorrectUrl(): void
+    public function testGetAffiliateProductsByIdSendsPutRequestWithCorrectUrl(): void
     {
         $api = $this->createApiWithMockHttp([
-            new Response(200, [], json_encode(['affrequest' => ['id' => 'abc123']])),
+            new Response(200, [], json_encode(['products' => [['id' => 'abc123']]])),
         ]);
 
-        $api->getAffiliateRequest($this->createMockAffiliate(), 'abc123');
+        $api->getAffiliateProducts($this->createMockAffiliate(), 'abc123');
 
         $request = $this->requestHistory[0]['request'];
         $this->assertSame('GET', $request->getMethod());
         $this->assertSame(
-            '/affiliate/programs/abc123/me.json',
+            '/affiliate/product_feeds/abc123/products.json',
             $request->getUri()->getPath()
         );
     }
 
-    public function testGetAffiliateRequestRaisesExceptionForInvalidId(): void
+    public function testGetAffiliateProductsByIdRaisesExceptionForInvalidId(): void
     {
         $api = $this->createApiWithMockHttp([
-            new Response(200, [], json_encode(['affrequest' => ['id' => 'abc123']])),
+            new Response(200, [], json_encode(['program' => ['id' => 'abc123']])),
         ]);
 
         $this->expectException(TPException::class);        
-        $this->expectExceptionMessage('Parameter id passed to Api::getAffiliateRequest() must be a positive integer or an alphanumeric slug.');
+        $this->expectExceptionMessage('Parameter id passed to Api::getAffiliateProducts() must be a positive integer or an alphanumeric slug.');
 
-        $api->getAffiliateRequest($this->createMockAffiliate(), []);
+        $api->getAffiliateProducts($this->createMockAffiliate(), []);
     }
 }

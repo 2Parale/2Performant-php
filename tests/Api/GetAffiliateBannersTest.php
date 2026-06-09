@@ -246,7 +246,7 @@ class GetAffiliateBannersTest extends TestCase
 
         $this->expectException(TPException::class);
         $this->expectExceptionMessage(
-            'Second argument of Api::getAffiliateBanners() should be interpolated safely to a string and not be boolean'
+            'Parameter id passed to Api::getAffiliateBanners() must be a positive integer or an alphanumeric slug.'
         );
 
         $api->getAffiliateBanners($this->createMockAffiliate(), null, null, $invalidId);

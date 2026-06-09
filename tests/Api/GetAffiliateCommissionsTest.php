@@ -285,7 +285,7 @@ class GetAffiliateCommissionsTest extends TestCase
 
         $this->expectException(TPException::class);
         $this->expectExceptionMessage(
-            'Second argument of Api::getAffiliateCommissions() should be interpolated safely to a string and not be boolean'
+            'Parameter id passed to Api::getAffiliateCommissions() must be a positive integer or an alphanumeric slug.'
         );
 
         $api->getAffiliateCommissions($this->createMockAffiliate(), null, null, $invalidId);

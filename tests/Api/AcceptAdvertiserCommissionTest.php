@@ -59,7 +59,7 @@ class AcceptAdvertiserCommissionTest extends TestCase
         ]);
 
         $this->expectException(TPException::class);        
-        $this->expectExceptionMessage('Second argument of Api::acceptAdvertiserCommission() should be interpolated safely to a string and not be boolean');
+        $this->expectExceptionMessage('Parameter id passed to Api::acceptAdvertiserCommission() must be a positive integer or an alphanumeric slug.');
 
         $api->acceptAdvertiserCommission($this->createMockAdvertiser(), []);
     }

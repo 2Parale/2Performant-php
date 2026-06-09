@@ -60,7 +60,7 @@ class GetAffiliateProgramTest extends TestCase
         ]);
 
         $this->expectException(TPException::class);        
-        $this->expectExceptionMessage('Second argument of Api::getAffiliateProgram() should be interpolated safely to a string and not be boolean');
+        $this->expectExceptionMessage('Parameter id passed to Api::getAffiliateProgram() must be a positive integer or an alphanumeric slug.');
 
         $api->getAffiliateProgram($this->createMockAffiliate(), []);
     }

@@ -60,7 +60,7 @@ class GetAdvertiserCommissionByIdTest extends TestCase
 
         
         $this->expectException(TPException::class);
-        $this->expectExceptionMessage('Second argument of Api::getAdvertiserCommission() should be interpolated safely to a string and not be boolean');
+        $this->expectExceptionMessage('Parameter id passed to Api::getAdvertiserCommission() must be a positive integer or an alphanumeric slug.');
 
         $api->getAdvertiserCommission($this->createMockAdvertiser(), "/foo");
     }
