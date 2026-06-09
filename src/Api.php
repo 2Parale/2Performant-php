@@ -189,7 +189,7 @@ class Api {
      * Create a manual commission for an affiliate as an advertiser
      * @param  AuthInterface    $auth        The authentication token container
      * @param  int|string       $affiliateId The affiliate's ID
-     * @param  int|float        $amount      The commission amount, in EUR
+     * @param  int|float        $amount      The commission amount
      * @param  string           $description The commission's description
      * @param  string           $currencyCode (optional) The commission's currency code
      *

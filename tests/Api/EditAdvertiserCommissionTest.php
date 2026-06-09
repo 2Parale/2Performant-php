@@ -41,7 +41,7 @@ class EditAdvertiserCommissionTest extends TestCase {
         ]);
     }
 
-    public function testSendsPutWithAffiliateUserId(): void
+    public function testSendsPutWithCommissionId(): void
     {
         $api = $this->createApiWithMockHttp([
             new Response(200, [], json_encode(['commission' => ['id' => 1]])),
