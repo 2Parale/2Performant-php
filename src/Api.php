@@ -301,7 +301,7 @@ class Api {
      */
     public function updateAdvertiserSaleCommission(AuthInterface $auth, $id, $amount, $currencyCode, $reason) {
         $this->validateId($id, __FUNCTION__);
-        
+
         $params = [
             'sale' => [
                 'amount' => $amount,
@@ -884,7 +884,7 @@ class Api {
         if ( is_bool($id) || 
             !is_scalar($id) ||
             (is_string($id) && trim($id) === '') ||
-            (is_numeric($id) && ($id != (int)$id || $id <= 0)) ||
+            (is_numeric($id) && (is_float($id) || is_double($id) || $id <= 0)) ||
             (is_string($id) && !preg_match('/^[a-zA-Z0-9_-]+$/', $id)) ) {
             throw new TPException(sprintf('Parameter id passed to Api::%s() must be a positive integer or an alphanumeric slug.', $callerName));
         }
