@@ -150,6 +150,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserProgram(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/advertiser/programs/'.$id, [], 'program', $auth);
     }
 
@@ -180,6 +181,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAdvertiserCommission(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/advertiser/programs/default/commissions/'.$id, [], 'commission', $auth);
     }
 
@@ -187,12 +189,13 @@ class Api {
      * Create a manual commission for an affiliate as an advertiser
      * @param  AuthInterface    $auth        The authentication token container
      * @param  int|string       $affiliateId The affiliate's ID
-     * @param  int|float        $amount      The commission amount, in EUR
+     * @param  int|float        $amount      The commission amount
      * @param  string           $description The commission's description
+     * @param  string           $currencyCode (optional) The commission's currency code
      *
      * @return ApiResponse
      */
-    public function createAdvertiserCommission(AuthInterface $auth, $affiliateId, $amount, $description) {
+    public function createAdvertiserCommission(AuthInterface $auth, $affiliateId, $amount, $description, $currencyCode = null) {
         $params = [
             'commission' => [
                 'user_id' => $affiliateId,
@@ -200,6 +203,10 @@ class Api {
                 'description' => $description
             ]
         ];
+
+        if($currencyCode && is_string($currencyCode) && strlen(trim($currencyCode)) === 3) {
+            $params['commission']['currency_code'] = trim($currencyCode);
+        }
 
         return $this->post('/advertiser/programs/default/commissions', $params, 'commission', $auth);
     }
@@ -215,6 +222,8 @@ class Api {
      * @return ApiResponse
      */
     public function editAdvertiserCommission(AuthInterface $auth, $id, $reason, $newAmount, $newDescription = null) {
+        $this->validateId($id, __FUNCTION__);
+
         if(is_numeric($newAmount)) {
             $newAmount = [
                 'amount' => $newAmount,
@@ -250,6 +259,7 @@ class Api {
      * @return ApiResponse
      */
     public function acceptAdvertiserCommission(AuthInterface $auth, $id, $reason = '') {
+        $this->validateId($id, __FUNCTION__);
         $params = [
             'commission' => [
                 'current_reason' => $reason
@@ -268,6 +278,8 @@ class Api {
      * @return ApiResponse
      */
     public function rejectAdvertiserCommission(AuthInterface $auth, $id, $reason) {
+        $this->validateId($id, __FUNCTION__);
+
         $params = [
             'commission' => [
                 'current_reason' => $reason
@@ -288,6 +300,8 @@ class Api {
      * @return ApiResponse
      */
     public function updateAdvertiserSaleCommission(AuthInterface $auth, $id, $amount, $currencyCode, $reason) {
+        $this->validateId($id, __FUNCTION__);
+
         $params = [
             'sale' => [
                 'amount' => $amount,
@@ -329,6 +343,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateProgram(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/affiliate/programs/'.$id, [], 'program', $auth);
     }
 
@@ -340,6 +355,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateRequest(AuthInterface $auth, $id) {
+        $this->validateId($id, __FUNCTION__);
         return $this->get('/affiliate/programs/'.$id.'/me', [], 'affrequest', $auth);
     }
 
@@ -348,16 +364,22 @@ class Api {
      * @param  AuthInterface                $auth   The authentication token container
      * @param  AffiliateCommissionFilter    $filter (optional) Result filtering options
      * @param  AffiliateCommissionSort      $sort   (optional) Result sorting options
+     * @param  int|string                   $id     (optional) The program's ID or slug to filter commissions by a specific program
      *
      * @return ApiResponse
      */
-    public function getAffiliateCommissions(AuthInterface $auth, AffiliateCommissionFilter $filter = null, AffiliateCommissionSort $sort = null) {
+    public function getAffiliateCommissions(AuthInterface $auth, AffiliateCommissionFilter $filter = null, AffiliateCommissionSort $sort = null, $id = null) {
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
 
         if($sort)
             $params = array_merge($params, $sort->toParams());
+
+        if($id !== null) {
+            $this->validateId($id, __FUNCTION__);
+            $params['program_id'] = $id;
+        }
 
         return $this->get('/affiliate/commissions', $params, 'commissions', $auth);
     }
@@ -391,6 +413,7 @@ class Api {
      * @return ApiResponse
      */
     public function getAffiliateProducts(AuthInterface $auth, $id, AffiliateProductFilter $filter = null, AffiliateProductSort $sort = null) {
+        $this->validateId($id, __FUNCTION__);
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
@@ -406,16 +429,22 @@ class Api {
      * @param  AuthInterface            $auth   The authentication token container
      * @param  AffiliateBannerFilter    $filter (optional) Result filtering options
      * @param  AffiliateBannerSort      $sort   (optional) Result sorting options
+     * @param  int|string               $id     (optional) The banner's ID or slug to filter banners by a specific banner
      *
      * @return ApiResponse
      */
-    public function getAffiliateBanners(AuthInterface $auth, AffiliateBannerFilter $filter = null, AffiliateBannerSort $sort = null) {
+    public function getAffiliateBanners(AuthInterface $auth, AffiliateBannerFilter $filter = null, AffiliateBannerSort $sort = null, $id = null) {
         $params = [];
         if($filter)
             $params = array_merge($params, $filter->toParams());
 
         if($sort)
             $params = array_merge($params, $sort->toParams());
+
+        if($id !== null) {
+            $this->validateId($id, __FUNCTION__);
+            $params['banner_id'] = $id;
+        }
 
         return $this->get('/affiliate/banners', $params, 'banners', $auth);
     }
@@ -848,6 +877,16 @@ class Api {
             if(!is_array($item) || !isset($item['url']) || !is_string($item['url']) || trim($item['url']) === '') {
                 throw new \InvalidArgumentException('Each tracking info item must be an array and contain a "url" key that is a non-empty string');
             }
+        }
+    }
+
+    private function validateId($id, $callerName = '') {
+        if ( is_bool($id) || 
+            !is_scalar($id) ||
+            (is_string($id) && trim($id) === '') ||
+            (is_numeric($id) && (is_float($id) || is_double($id) || $id <= 0)) ||
+            (is_string($id) && !preg_match('/^[a-zA-Z0-9_-]+$/', $id)) ) {
+            throw new TPException(sprintf('Parameter id passed to Api::%s() must be a positive integer or an alphanumeric slug.', $callerName));
         }
     }
 }

@@ -61,4 +61,36 @@ class CreateAdvertiserCommissionTest extends TestCase {
         $this->assertSame(15.50, $body['commission']['amount']);
         $this->assertSame('Manual bonus', $body['commission']['description']);
     }
+
+    public function testSendsPostWithAllParamsWhenAllParamsProvided(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(200, [], json_encode(['commission' => ['id' => 1]])),
+        ]);
+
+        $api->createAdvertiserCommission($this->createMockAdvertiser(), 123, 15.50, 'Manual bonus', 'EUR');
+
+        $request = $this->requestHistory[0]['request'];
+        $body = json_decode($request->getBody()->getContents(), true);
+        $this->assertSame('EUR', $body['commission']['currency_code']);
+        $this->assertSame(123, $body['commission']['user_id']);
+        $this->assertSame(15.50, $body['commission']['amount']);
+        $this->assertSame('Manual bonus', $body['commission']['description']);
+    }
+
+    public function testSendsPostWithoutCurrencyCodeWhenCurrencyCodeNotProvided(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(200, [], json_encode(['commission' => ['id' => 1]])),
+        ]);
+
+        $api->createAdvertiserCommission($this->createMockAdvertiser(), 123, 15.50, 'Manual bonus');
+
+        $request = $this->requestHistory[0]['request'];
+        $body = json_decode($request->getBody()->getContents(), true);
+        $this->assertArrayNotHasKey('currency_code', $body['commission']);
+        $this->assertSame(123, $body['commission']['user_id']);
+        $this->assertSame(15.50, $body['commission']['amount']);
+        $this->assertSame('Manual bonus', $body['commission']['description']);
+    }
 }
