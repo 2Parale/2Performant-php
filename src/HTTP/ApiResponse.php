@@ -61,7 +61,7 @@ class ApiResponse implements AuthInterface {
     /**
      * Checks if a HTTP response is a valid API response
      * @param  PsrHttpMessageResponseInterface $response The response to check
-     * @return PsrHttpMessageResponseInterface           The same response
+     * @return \stdClass|null           The same response
      * @throws InvalidResponseException
      */
     public static function validateResponse(\Psr\Http\Message\ResponseInterface $response) {

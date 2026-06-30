@@ -165,8 +165,7 @@ class Affiliate extends User {
                 'Failed to decode response body: ' . json_last_error_msg(),
                 $response->getStatusCode()
             );
-        }
-        
+        } 
 
         return $data;
     }
@@ -191,7 +190,6 @@ class Affiliate extends User {
                 $response->getStatusCode()
             );
         }
-        
 
         return $data;
     }
