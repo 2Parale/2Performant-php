@@ -28,9 +28,7 @@ class ApiResponse implements AuthInterface {
         $this->rawResponse = $response;
         $this->owner = $user;
 
-        $response = self::validateResponse($response);
-
-        $data = json_decode($response->getBody());
+        $data = self::validateResponse($response);
 
         if(isset($data->metadata)) {
             $this->meta = $data->metadata;
@@ -128,7 +126,7 @@ class ApiResponse implements AuthInterface {
             throw new APIException($message, $response->getStatusCode());
         }
 
-        return $response;
+        return $data;
     }
 
     /**
