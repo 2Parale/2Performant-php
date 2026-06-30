@@ -155,7 +155,7 @@ class ApiResponse implements AuthInterface {
      */
     public function getHeader($header) {
         if($this->rawResponse->hasHeader($header)) {
-            return $this->rawResponse->getHeader($header);
+            return $this->rawResponse->getHeader($header)[0];
         }
 
         return false;
