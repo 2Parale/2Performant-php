@@ -65,9 +65,12 @@ class CollectionSortTest extends TestCase
             return true;
         }, E_USER_ERROR);
 
-        $sort->nonexistentFieldAsc();
+        try{
+            $sort->nonexistentFieldAsc();
+        } finally {
+            restore_error_handler();
+        }
 
-        restore_error_handler();
         $this->assertTrue($errorTriggered);
     }
 
@@ -81,9 +84,12 @@ class CollectionSortTest extends TestCase
             return true;
         }, E_USER_ERROR);
 
-        $sort->createdAt();
+        try{
+            $sort->createdAt();
+        } finally {
+            restore_error_handler();
+        }
 
-        restore_error_handler();
         $this->assertTrue($errorTriggered);
     }
 }
