@@ -167,4 +167,16 @@ class AffiliateCreateLostOrdersTest extends TestCase
 
         $this->createAffiliate()->createLostOrders('/nonexistent/file.csv');
     }
+
+    public function testThrowsApiExceptionOnInvalidJsonResponseBody(): void
+    {
+        $this->initApiWithMockHttp([
+            new Response(201, [], 'not valid json {{{'),
+        ]);
+
+        $this->expectException(\TPerformant\API\Exception\APIException::class);
+        $this->expectExceptionMessageMatches('/Failed to decode response body/');
+
+        $this->createAffiliate()->createLostOrders($this->validCsvPath);
+    }
 }
