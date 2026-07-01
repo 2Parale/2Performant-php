@@ -65,7 +65,7 @@ class CollectionSortTest extends TestCase
             return true;
         }, E_USER_ERROR);
 
-        try{
+        try {
             $sort->nonexistentFieldAsc();
         } finally {
             restore_error_handler();
@@ -84,7 +84,7 @@ class CollectionSortTest extends TestCase
             return true;
         }, E_USER_ERROR);
 
-        try{
+        try {
             $sort->createdAt();
         } finally {
             restore_error_handler();

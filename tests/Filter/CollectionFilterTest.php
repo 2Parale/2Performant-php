@@ -77,7 +77,7 @@ class CollectionFilterTest extends TestCase
             return true;
         }, E_USER_ERROR);
 
-        try{
+        try {
             $filter->nonexistentField('value');
         } finally {
             restore_error_handler();
