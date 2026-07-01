@@ -30,6 +30,15 @@ class ApiResponse implements AuthInterface {
 
         $data = self::validateResponse($response);
 
+        if (!is_object($data)) {
+            throw new InvalidResponseException(
+                'Response body must be a JSON object containing the expected payload.',
+                0,
+                null,
+                $response->getBody()
+            );
+        }
+
         if(isset($data->metadata)) {
             $this->meta = $data->metadata;
             unset($data->metadata);
@@ -61,7 +70,7 @@ class ApiResponse implements AuthInterface {
     /**
      * Checks if a HTTP response is a valid API response
      * @param  PsrHttpMessageResponseInterface $response The response to check
-     * @return \stdClass|null           The same response
+     * @return \stdClass|null           Decoded JSON response body
      * @throws InvalidResponseException
      */
     public static function validateResponse(\Psr\Http\Message\ResponseInterface $response) {
@@ -149,10 +158,10 @@ class ApiResponse implements AuthInterface {
     /**
      * Get header from API HTTP response
      * @param  string $header Header namespace
-     * @return string         Header value
+     * @return string|bool         Header value
      */
     public function getHeader($header) {
-        if($this->rawResponse->hasHeader($header)) {
+        if($this->rawResponse->hasHeader($header) && isset($this->rawResponse->getHeader($header)[0])) {
             return $this->rawResponse->getHeader($header)[0];
         }
 
