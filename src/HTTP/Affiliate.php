@@ -158,7 +158,16 @@ class Affiliate extends User {
 
         $this->updateAuthTokensFromResponse($response);
 
-        return json_decode((string) $response->getBody());
+        $data = json_decode((string) $response->getBody());
+
+        if($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new APIException(
+                'Failed to decode response body: ' . json_last_error_msg(),
+                $response->getStatusCode()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -173,6 +182,15 @@ class Affiliate extends User {
 
         $this->updateAuthTokensFromResponse($response);
 
-        return json_decode((string) $response->getBody());
+        $data = json_decode((string) $response->getBody());
+
+        if($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            throw new APIException(
+                'Failed to decode response body: ' . json_last_error_msg(),
+                $response->getStatusCode()
+            );
+        }
+
+        return $data;
     }
 }
