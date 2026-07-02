@@ -62,6 +62,29 @@ class AffiliateTest extends TestCase
         new Affiliate(new SavedSession('tok', 'cli', 'uid@test.com'));
     }
 
+    // --- getQuicklink ---
+
+    public function testGetQuicklinkDelegatesToApiWithUserDataAndProgram(): void
+    {
+        $this->initApiWithMockHttp([]);
+
+        $affiliate = $this->createAffiliate();
+
+        $modelAffiliate = new \TPerformant\API\Model\Affiliate(
+            (object)['id' => 1, 'role' => 'affiliate', 'unique_code' => 'aff-123']
+        );
+        $reflection = new \ReflectionProperty(\TPerformant\API\HTTP\User::class, 'userData');
+        $reflection->setValue($affiliate, $modelAffiliate);
+
+        $url = $affiliate->getQuicklink('https://shop.example.com/page', 'prog-xyz');
+
+        $this->assertIsString($url);
+        $this->assertStringContainsString('ad_type=quicklink', $url);
+        $this->assertStringContainsString('aff_code=aff-123', $url);
+        $this->assertStringContainsString('unique=prog-xyz', $url);
+        $this->assertStringContainsString('redirect_to=', $url);
+    }
+
     // --- getPrograms ---
 
     public function testGetProgramsReturnsArrayOfAffiliateProgramModels(): void
