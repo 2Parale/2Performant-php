@@ -52,10 +52,33 @@ class AdvertiserCommissionTest extends TestCase
                 'Correction',
                 ['amount' => 20.0, 'currencyCode' => 'RON'],
                 null
-            );
+            )
+            ->willReturn('mocked_result');
 
         $commission = $this->makeCommission(7, $advertiser);
-        $commission->edit('Correction', ['amount' => 20.0, 'currencyCode' => 'RON']);
+        $result = $commission->edit('Correction', ['amount' => 20.0, 'currencyCode' => 'RON']);
+
+        $this->assertSame('mocked_result', $result);
+    }
+
+    public function testEditWithArrayMissingCurrencyCodeDefaultsToNull(): void
+    {
+        $advertiser = $this->createMock(Advertiser::class);
+        $advertiser
+            ->expects($this->once())
+            ->method('editCommission')
+            ->with(
+                7,
+                'No currency',
+                ['amount' => 20.0, 'currencyCode' => null],
+                null
+            )
+            ->willReturn('mocked_result');
+
+        $commission = $this->makeCommission(7, $advertiser);
+        $result = $commission->edit('No currency', ['amount' => 20.0]);
+
+        $this->assertSame('mocked_result', $result);
     }
 
     public function testEditWithArrayMissingAmountThrowsTPException(): void
@@ -80,10 +103,33 @@ class AdvertiserCommissionTest extends TestCase
                 'Object edit',
                 ['amount' => 30.0, 'currencyCode' => 'USD'],
                 null
-            );
+            )
+            ->willReturn('mocked_result');
 
         $commission = $this->makeCommission(9, $advertiser);
-        $commission->edit('Object edit', (object) ['amount' => 30.0, 'currencyCode' => 'USD']);
+        $result = $commission->edit('Object edit', (object) ['amount' => 30.0, 'currencyCode' => 'USD']);
+
+        $this->assertSame('mocked_result', $result);
+    }
+
+    public function testEditWithObjectMissingCurrencyCodeDefaultsToNull(): void
+    {
+        $advertiser = $this->createMock(Advertiser::class);
+        $advertiser
+            ->expects($this->once())
+            ->method('editCommission')
+            ->with(
+                9,
+                'No currency',
+                ['amount' => 30.0, 'currencyCode' => null],
+                null
+            )
+            ->willReturn('mocked_result');
+
+        $commission = $this->makeCommission(9, $advertiser);
+        $result = $commission->edit('No currency', (object) ['amount' => 30.0]);
+
+        $this->assertSame('mocked_result', $result);
     }
 
     public function testEditWithObjectMissingAmountThrowsTPException(): void
