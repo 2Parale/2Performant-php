@@ -7,7 +7,7 @@ use TPerformant\API\Model\Advertiser;
 use TPerformant\API\Model\Affiliate;
 use TPerformant\API\Model\User;
 
-class UserModelTest extends TestCase
+class UserTest extends TestCase
 {
     public function testUserInfoIsNullByDefault(): void
     {

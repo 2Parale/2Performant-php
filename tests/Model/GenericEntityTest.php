@@ -41,7 +41,7 @@ class GenericEntityTest extends TestCase
         $this->assertSame('active', $entity->getStatus());
     }
 
-    public function testKeyWithTrailingUnderscoreIsNormalised(): void
+    public function testSnakeCaseKeyIsConvertedToCamelCase(): void
     {
         // Only interior underscores are converted; no trailing underscore in real API
         // but verifying that already-camelCased storage property maps correctly.
