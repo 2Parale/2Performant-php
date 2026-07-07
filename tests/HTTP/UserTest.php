@@ -17,7 +17,7 @@ use TPerformant\API\Model\Affiliate as ModelAffiliate;
  * Exposes the protected updateAuthTokensFromResponse() method for inspection.
  */
 class TestableUser extends \TPerformant\API\HTTP\User {
-    public function __construct() {}
+    public function __construct($email = '', $password = '') {}
 
     public function callUpdateAuthTokensFromResponse(\Psr\Http\Message\ResponseInterface $response): void
     {
