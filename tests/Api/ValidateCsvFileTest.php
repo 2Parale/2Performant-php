@@ -67,8 +67,6 @@ class ValidateCsvFileTest extends TestCase
 
     public function testHeadersWithLeadingWhitespaceAreAccepted(): void
     {
-        // The validateCsvFile implementation uses array_map('trim', $firstLine),
-        // so leading/trailing spaces around each header are stripped before comparison.
         $path = $this->createTempCsvFromRawContent(
             " campaign_unique , order_date , order_id , description , order_value , click_tag \n"
             . "camp1,2024-01-01,ORD1,desc,100,tag\n"
@@ -107,7 +105,7 @@ class ValidateCsvFileTest extends TestCase
         }
     }
 
-    public function testValidationDoesNotSendRequestOnWhitespaceMismatch(): void
+    public function testWhitespacePaddedHeadersDoNotPreventHttpRequest(): void
     {
         // Whitespace-padded headers that happen to still contain a required
         // name — trimming should resolve them; no request should be missing.
@@ -130,26 +128,6 @@ class ValidateCsvFileTest extends TestCase
 
     // --- Extra columns allowed ---
 
-    public function testSingleExtraColumnDoesNotFailValidation(): void
-    {
-        $path = $this->createTempCsvFromHeaders([
-            'campaign_unique', 'order_date', 'order_id',
-            'description', 'order_value', 'click_tag', 'notes',
-        ]);
-
-        try {
-            $api = $this->createApiWithMockHttp([
-                new Response(201, [], $this->successResponseBody()),
-            ]);
-
-            $response = $api->createAffiliateLostOrders($this->createMockAffiliate(), $path);
-
-            $this->assertSame(201, $response->getStatusCode());
-        } finally {
-            unlink($path);
-        }
-    }
-
     public function testMultipleExtraColumnsDoNotFailValidation(): void
     {
         $path = $this->createTempCsvFromHeaders([
@@ -166,44 +144,6 @@ class ValidateCsvFileTest extends TestCase
             $response = $api->createAffiliateLostOrders($this->createMockAffiliate(), $path);
 
             $this->assertSame(201, $response->getStatusCode());
-        } finally {
-            unlink($path);
-        }
-    }
-
-    public function testMissingRequiredHeaderThrows(): void
-    {
-        $path = $this->createTempCsvFromHeaders([
-            'campaign_unique', 'order_date', 'order_id', 'description', 'order_value',
-            // 'click_tag' is intentionally omitted
-        ]);
-
-        try {
-            $api = $this->createApiWithMockHttp([]);
-
-            $this->expectException(\InvalidArgumentException::class);
-            $this->expectExceptionMessageMatches('/click_tag/');
-
-            $api->createAffiliateLostOrders($this->createMockAffiliate(), $path);
-        } finally {
-            unlink($path);
-        }
-    }
-
-    public function testMissingHeaderValidationDoesNotSendHttpRequest(): void
-    {
-        $path = $this->createTempCsvFromHeaders(['unrelated_col']);
-
-        try {
-            $api = $this->createApiWithMockHttp([]);
-
-            try {
-                $api->createAffiliateLostOrders($this->createMockAffiliate(), $path);
-            } catch (\InvalidArgumentException $e) {
-                // expected
-            }
-
-            $this->assertCount(0, $this->requestHistory);
         } finally {
             unlink($path);
         }

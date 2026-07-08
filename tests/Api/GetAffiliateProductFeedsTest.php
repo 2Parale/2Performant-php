@@ -124,7 +124,7 @@ class GetAffiliateProductFeedsTest extends TestCase
 
         $params = $this->getQueryParams();
         // AffiliateProductFeedSort has no sortable fields, so sort key should be empty
-        $this->assertTrue(empty($params['sort'] ?? []));
+        $this->assertArrayNotHasKey('sort', $params);
     }
 
     // --- Filter and sort merged ---

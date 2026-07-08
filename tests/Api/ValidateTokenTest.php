@@ -26,7 +26,7 @@ class ValidateTokenTest extends TestCase
         ]);
     }
 
-    private function createMockAuth(): Affiliate
+    private function createMockAffilliate(): Affiliate
     {
         $auth = $this->createMock(Affiliate::class);
         $auth->method('getAccessToken')->willReturn('test-access-token');
@@ -49,7 +49,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertSame('GET', $this->requestHistory[0]['request']->getMethod());
     }
@@ -60,7 +60,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertSame(
             '/users/validate_token.json',
@@ -74,7 +74,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertEmpty($this->requestHistory[0]['request']->getUri()->getQuery());
     }
@@ -87,7 +87,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertSame(
             'test-access-token',
@@ -101,7 +101,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertSame(
             'test-client-token',
@@ -115,7 +115,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $api->validateToken($this->createMockAuth());
+        $api->validateToken($this->createMockAffilliate());
 
         $this->assertSame(
             'test@example.com',
@@ -131,7 +131,7 @@ class ValidateTokenTest extends TestCase
             new Response(200, [], $this->tokenResponseBody()),
         ]);
 
-        $response = $api->validateToken($this->createMockAuth());
+        $response = $api->validateToken($this->createMockAffilliate());
 
         $this->assertInstanceOf(ApiResponse::class, $response);
     }

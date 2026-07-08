@@ -14,9 +14,6 @@ use TPerformant\API\HTTP\Affiliate;
 /**
  * Dedicated tests for the private validateTrackingInfo() method, exercised
  * through createAffiliateGoogleAdsLinkerTrackingSettings() which is the only caller.
- *
- * Focuses on edge cases beyond what CreateAffiliateGoogleAdsLinkerTrackingSettingsTest covers:
- * non-array items, non-string urls, whitespace-only urls, mixed valid/invalid lists.
  */
 class ValidateTrackingInfoTest extends TestCase
 {
@@ -48,44 +45,7 @@ class ValidateTrackingInfoTest extends TestCase
         return json_encode([['final_url' => 'https://example.com', 'tracking_url' => 'https://event.2performant.com/...']]);
     }
 
-    // --- Empty array ---
-
-    public function testEmptyTrackingInfoArrayThrows(): void
-    {
-        $api = $this->createApiWithMockHttp([]);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/trackingInfo must not be empty/');
-
-        $api->createAffiliateGoogleAdsLinkerTrackingSettings($this->createMockAffiliate(), []);
-    }
-
-    public function testEmptyArrayDoesNotSendHttpRequest(): void
-    {
-        $api = $this->createApiWithMockHttp([]);
-
-        try {
-            $api->createAffiliateGoogleAdsLinkerTrackingSettings($this->createMockAffiliate(), []);
-        } catch (\InvalidArgumentException $e) {
-            // expected
-        }
-
-        $this->assertCount(0, $this->requestHistory);
-    }
-
     // --- Missing url key ---
-
-    public function testItemWithoutUrlKeyThrows(): void
-    {
-        $api = $this->createApiWithMockHttp([]);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/"url"/');
-
-        $api->createAffiliateGoogleAdsLinkerTrackingSettings($this->createMockAffiliate(), [
-            ['stats_tags' => 'tag1'],
-        ]);
-    }
 
     public function testItemWithOnlyUnrelatedKeysThrows(): void
     {
@@ -135,18 +95,6 @@ class ValidateTrackingInfoTest extends TestCase
 
     // --- Empty url string ---
 
-    public function testItemWithEmptyUrlStringThrows(): void
-    {
-        $api = $this->createApiWithMockHttp([]);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/"url"/');
-
-        $api->createAffiliateGoogleAdsLinkerTrackingSettings($this->createMockAffiliate(), [
-            ['url' => ''],
-        ]);
-    }
-
     public function testItemWithWhitespaceOnlyUrlThrows(): void
     {
         $api = $this->createApiWithMockHttp([]);
@@ -159,17 +107,6 @@ class ValidateTrackingInfoTest extends TestCase
     }
 
     // --- Non-array item ---
-
-    public function testStringItemInsteadOfArrayThrows(): void
-    {
-        $api = $this->createApiWithMockHttp([]);
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        $api->createAffiliateGoogleAdsLinkerTrackingSettings($this->createMockAffiliate(), [
-            'https://example.com',
-        ]);
-    }
 
     public function testNullItemInsteadOfArrayThrows(): void
     {

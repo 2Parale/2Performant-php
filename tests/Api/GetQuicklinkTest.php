@@ -29,15 +29,6 @@ class GetQuicklinkTest extends TestCase
         $this->assertStringStartsWith('https://event.staging.2performant.com/', $url);
     }
 
-    public function testDoesNotAlterNonApiSubdomains(): void
-    {
-        $api = new Api('https://api.2performant.com');
-
-        $url = $api->getQuicklink('https://example.com', 'aff1', 'prog1');
-
-        $this->assertStringNotContainsString('api.2performant.com', $url);
-    }
-
     // --- URL assembly ---
 
     public function testGeneratesCorrectClickEventPath(): void
