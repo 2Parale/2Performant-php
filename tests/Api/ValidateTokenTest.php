@@ -8,8 +8,8 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use TPerformant\API\Api;
+use TPerformant\API\HTTP\Affiliate;
 use TPerformant\API\HTTP\ApiResponse;
-use TPerformant\API\HTTP\AuthInterface;
 
 class ValidateTokenTest extends TestCase
 {
@@ -26,9 +26,9 @@ class ValidateTokenTest extends TestCase
         ]);
     }
 
-    private function createMockAuth(): AuthInterface
+    private function createMockAuth(): Affiliate
     {
-        $auth = $this->createMock(AuthInterface::class);
+        $auth = $this->createMock(Affiliate::class);
         $auth->method('getAccessToken')->willReturn('test-access-token');
         $auth->method('getClientToken')->willReturn('test-client-token');
         $auth->method('getUid')->willReturn('test@example.com');
