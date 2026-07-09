@@ -145,6 +145,18 @@ class ExecuteRequestTest extends TestCase
         $api->requestRaw('GET', '/some/endpoint');
     }
 
+    public function testThrowsApiExceptionWithStructuredErrorUsingErrorKey(): void
+    {
+        $api = $this->createApiWithMockHttp([
+            new Response(422, [], json_encode(['errors' => [['error' => 'field_invalid']]])),
+        ]);
+
+        $this->expectException(APIException::class);
+        $this->expectExceptionMessageMatches('/field_invalid/');
+
+        $api->requestRaw('GET', '/some/endpoint');
+    }
+
     // --- throwOnErrorResponse: non-array errors value ---
 
     public function testThrowsApiExceptionWhenErrorsValueIsNonArray(): void
