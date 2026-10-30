@@ -10,8 +10,6 @@ use TPerformant\API\Filter\AffiliateCommissionFilter;
 use TPerformant\API\Filter\AffiliateCommissionSort;
 use TPerformant\API\Filter\AffiliateProductFeedFilter;
 use TPerformant\API\Filter\AffiliateProductFeedSort;
-use TPerformant\API\Filter\AffiliateProductFilter;
-use TPerformant\API\Filter\AffiliateProductSort;
 use TPerformant\API\Filter\AffiliateBannerFilter;
 use TPerformant\API\Filter\AffiliateBannerSort;
 use TPerformant\API\Filter\AffiliateAdvertiserPromotionFilter;
@@ -94,18 +92,6 @@ class Affiliate extends User {
      */
     public function getProductFeeds(AffiliateProductFeedFilter $filter = null, AffiliateProductFeedSort $sort = null) {
         return $this->updateAuthTokensAndReturn(Api::getInstance()->getAffiliateProductFeeds($this, $filter, $sort));
-    }
-
-    /**
-     * Get products from a product feed
-     * @param  int|string               $id     Product feed's ID
-     * @param  AffiliateProductFilter   $filter (optional) Result filtering options
-     * @param  AffiliateProductSort     $sort   (optional) Result sorting options
-     *
-     * @return AffiliateProduct[]|Product[]
-     */
-    public function getProducts($id, AffiliateProductFilter $filter = null, AffiliateProductSort $sort = null) {
-        return $this->updateAuthTokensAndReturn(Api::getInstance()->getAffiliateProducts($this, $id, $filter, $sort));
     }
 
     /**
