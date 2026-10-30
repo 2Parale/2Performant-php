@@ -16,7 +16,6 @@ use TPerformant\API\Model\AffiliateProgram;
 use TPerformant\API\Model\Affrequest;
 use TPerformant\API\Model\Banner;
 use TPerformant\API\Model\Commission;
-use TPerformant\API\Model\Product;
 use TPerformant\API\Model\ProductFeed;
 
 class AffiliateTest extends TestCase
@@ -192,25 +191,6 @@ class AffiliateTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertInstanceOf(ProductFeed::class, $result[0]);
-    }
-
-    // --- getProducts ---
-
-    public function testGetProductsReturnsArrayOfProductModels(): void
-    {
-        $this->initApiWithMockHttp([
-            new Response(200, [], json_encode([
-                'products' => [
-                    ['id' => 20, 'title' => 'Widget A'],
-                ],
-            ])),
-        ]);
-
-        $result = $this->createAffiliate()->getProducts(3);
-
-        $this->assertIsArray($result);
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf(Product::class, $result[0]);
     }
 
     // --- getBanners ---

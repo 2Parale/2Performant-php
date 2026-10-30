@@ -18,8 +18,6 @@ use TPerformant\API\Filter\AffiliateCommissionFilter;
 use TPerformant\API\Filter\AffiliateCommissionSort;
 use TPerformant\API\Filter\AffiliateProductFeedFilter;
 use TPerformant\API\Filter\AffiliateProductFeedSort;
-use TPerformant\API\Filter\AffiliateProductFilter;
-use TPerformant\API\Filter\AffiliateProductSort;
 use TPerformant\API\Filter\AffiliateBannerFilter;
 use TPerformant\API\Filter\AffiliateBannerSort;
 use TPerformant\API\Filter\AffiliateAdvertiserPromotionFilter;
@@ -401,27 +399,6 @@ class Api {
             $params = array_merge($params, $sort->toParams());
 
         return $this->get('/affiliate/product_feeds', $params, 'product_feeds', $auth);
-    }
-
-    /**
-     * Get products from a product feed as an affiliate
-     * @param  AuthInterface            $auth   The authentication token container
-     * @param  int|string               $id     Product feed's ID
-     * @param  AffiliateProductFilter   $filter (optional) Result filtering options
-     * @param  AffiliateProductSort     $sort   (optional) Result sorting options
-     *
-     * @return ApiResponse
-     */
-    public function getAffiliateProducts(AuthInterface $auth, $id, AffiliateProductFilter $filter = null, AffiliateProductSort $sort = null) {
-        $this->validateId($id, __FUNCTION__);
-        $params = [];
-        if($filter)
-            $params = array_merge($params, $filter->toParams());
-
-        if($sort)
-            $params = array_merge($params, $sort->toParams());
-
-        return $this->get('/affiliate/product_feeds/'.$id.'/products', $params, 'products', $auth);
     }
 
     /**
